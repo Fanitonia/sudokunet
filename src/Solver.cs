@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Sudoku
 {
+
     public partial class Sudoku
     {
         // checks if generated sudoku table can be solved
@@ -26,6 +28,7 @@ namespace Sudoku
             if (count == 0)
                 return false;
 
+            step = 0;
             timer.Restart();
             timer.Start();
             do
@@ -34,6 +37,8 @@ namespace Sudoku
                 {
                     if (cell.pNumbers.Count == 0 && cell.value == EMPTY_CELL)
                         return false;
+
+                    step++;
                 }
 
                 foreach (Cell cell in solvedField)
@@ -44,6 +49,8 @@ namespace Sudoku
                         UpdateAllPotentials(solvedField);
                         break;
                     }
+
+                    step++;
                 }
             } while (!IsSudokuValid(solvedField));
             timer.Stop();
@@ -56,7 +63,7 @@ namespace Sudoku
             for (int y = 0; y < 9; y++)
             {
                 for (int x = 0; x < 9; x++)
-                    solvedField[y, x] = new Cell(field[y, x].value, field[y, x].pNumbers);
+                    solvedField[y, x] = new Cell(field[y, x].value, field[y, x].pNumbers, field[y, x].canChange);
             }
         }
 
