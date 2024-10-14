@@ -7,7 +7,6 @@
             Sudoku sudoku = new Sudoku();
 
             sudoku.StartGame();
-                
         }
     }
 }
