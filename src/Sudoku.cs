@@ -21,8 +21,9 @@ namespace Sudoku
         private class Cell
         {
             public int value = 0;
-            public List<int> pNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
             public bool canChange = true;
+            public List<int> pNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            
             public Cell() { }
             public Cell(int value, List<int> pNumbers, bool canChange)
             {
@@ -41,51 +42,37 @@ namespace Sudoku
 
         public void StartGame()
         {
-            GenerateField();
+            int input;
             do
             {
-                PrintBoard(field);
-                HandleInput();
-            } while(true);
-        }
+                Console.Clear();
+                Console.WriteLine("<---<Sudoku>--->");
+                Console.WriteLine("1. New Game");
+                Console.WriteLine("2. Sudoku Solver");
+            } while (!(int.TryParse(Console.ReadLine(), out input) && (input > 0 && input < 3)));
 
-        private void GenerateField()
-        {
-            Console.Write("Generating...");
-            Random random = new Random();
-            int x, y;
-            do
+            if (input == 1)
             {
-                for (int i = 0; i < 9; i++)
+                GenerateField();
+                do
                 {
-                    for (int j = 0; j < 9; j++)
-                        field[i, j] = new Cell();
-                }
-
-                for (int i = 0; i < 30; i++)
+                    PrintBoard(field, false);
+                    HandleInput(false);
+                } while (true);
+            }
+            else if (input == 2) 
+            {
+                CreateEmptyField();
+                do
                 {
-                    do
-                    {
-                        y = random.Next(9);
-                        x = random.Next(9);
-                    } while (field[y, x].value != EMPTY_CELL);
-
-                    try
-                    {
-                        field[y, x].value = field[y, x].pNumbers[random.Next(field[y, x].pNumbers.Count)];
-                        field[y, x].canChange = false;
-                    }
-                    catch (Exception)
-                    {
-                        continue;
-                    }
-
-                    UpdateAllPotentials(field);
-                }
-            } while (!Solve());
+                    PrintBoard(field, true);
+                    HandleInput(true);
+                }while(true);
+            }
         }
+
         // i can't explain this
-        private void PrintBoard(Cell[,] board)
+        private void PrintBoard(Cell[,] board, bool isSolverMode)
         {
             Console.Clear();
             int fieldX = 0, fieldY = 0;
@@ -128,13 +115,12 @@ namespace Sudoku
                         }
                         else if (board[fieldY, fieldX].value != EMPTY_CELL)
                         {
-                            if (board[fieldY, fieldX].canChange)
+                            if (board[fieldY, fieldX].canChange && !isSolverMode)
                                 Console.ForegroundColor = ConsoleColor.Red;
 
                             Console.Write(board[fieldY, fieldX].value);
                             Console.ForegroundColor = userForeColor;
                         }
-                            
                         else
                             Console.Write(" ");
 
@@ -151,15 +137,15 @@ namespace Sudoku
 
             Console.WriteLine();
             if(!endGame)
-                Console.WriteLine("Move -> UP, DOWN, RIGHT, LEFT arrow buttons\nPick Number -> 1-9\nDelete Number -> Del\nAuto Solve -> S\nClose -> Q");
+                Console.WriteLine("Move -> UP, DOWN, RIGHT, LEFT arrow buttons\nPick Number -> 1-9\nDelete Number -> Del\nSolve -> S\nClose -> Q");
         }
 
-        private void HandleInput()
+        private void HandleInput(bool isSolverMode)
         {
             ConsoleKeyInfo input;
             input = Console.ReadKey(true);
 
-            if(char.IsNumber(input.KeyChar) && field[Cursor.y, Cursor.x].value == EMPTY_CELL)
+            if(char.IsNumber(input.KeyChar) && field[Cursor.y, Cursor.x].canChange)
             {
                 field[Cursor.y, Cursor.x].value = (int) char.GetNumericValue(input.KeyChar);
                 return;
@@ -190,7 +176,19 @@ namespace Sudoku
                     Environment.Exit(0);
                     break;
                 case ConsoleKey.S:
-                    EndGame();
+                    if (!isSolverMode)
+                        EndGame();
+                    else
+                    {
+                        if(SolverMode())
+                            EndGame();
+                        else
+                        {
+                            PrintBoard(field, true);
+                            Console.WriteLine("There is no solution.");
+                            QuitOrRestart();
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -205,7 +203,7 @@ namespace Sudoku
         private void EndGame()
         {
             endGame = true;
-            PrintBoard(solvedField);
+            PrintBoard(solvedField, false);
             Console.WriteLine($"Sudoku solved in {timer.ElapsedMilliseconds} ms\nTotal Steps: {step}");
             QuitOrRestart();
         }
@@ -213,7 +211,7 @@ namespace Sudoku
         private void WinGame()
         {
             endGame = true;
-            PrintBoard(field);
+            PrintBoard(field, false);
             Console.WriteLine("\n     YOU DID WIN!!!");
             QuitOrRestart();
         }
@@ -221,7 +219,7 @@ namespace Sudoku
         private void QuitOrRestart()
         {
             endGame = false;
-            Console.WriteLine("\nPress Enter to play again or Q to quit.");
+            Console.WriteLine("\nPress Enter to restart or Q to quit.");
             while (true)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);

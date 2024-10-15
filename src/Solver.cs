@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Sudoku
 {
-
     public partial class Sudoku
     {
         // checks if generated sudoku table can be solved
@@ -16,21 +15,10 @@ namespace Sudoku
             Random random = new Random();
             CopyBoard();
 
-            // checks how many cells are there that it's potentialNumber count is 1
-            int count = 0;
-            foreach (Cell cell in solvedField)
-            {
-                if (cell.pNumbers.Count == 1 && cell.value == EMPTY_CELL)
-                    count++;
-            }
-
-            // if there is 0 cells it'll be hard for player so generate new field
-            if (count == 0)
-                return false;
-
             step = 0;
             timer.Restart();
             timer.Start();
+            UpdateAllPotentials(solvedField);
             do
             {
                 foreach (Cell cell in solvedField)
@@ -60,10 +48,18 @@ namespace Sudoku
         // copies field to solvedField to solve sudoku without changing main field
         private void CopyBoard()
         {
+            bool canChange = true;
             for (int y = 0; y < 9; y++)
             {
                 for (int x = 0; x < 9; x++)
-                    solvedField[y, x] = new Cell(field[y, x].value, field[y, x].pNumbers, field[y, x].canChange);
+                {
+                    if (field[y, x].value != EMPTY_CELL)
+                        canChange = false;
+                    else
+                        canChange = true;
+
+                    solvedField[y, x] = new Cell(field[y, x].value, field[y, x].pNumbers, canChange);
+                }
             }
         }
 
@@ -77,6 +73,7 @@ namespace Sudoku
 
                 else if (board[i, x].value == number)
                     return false;
+                step++;
             }
 
             // finding top left position of the 3x3 are position's part of
@@ -90,8 +87,10 @@ namespace Sudoku
                 {
                     if (board[rowStart + i, columnStart + j].value == number)
                         return false;
+                    step++;
                 }
             }
+            
             return true;
         }
 
@@ -103,6 +102,7 @@ namespace Sudoku
             {
                 if (IsPositionSuitable(y, x, i, board))
                     tmpNumbers.Add(i);
+                step++;
             }
             board[y, x].pNumbers.Clear();
             board[y, x].pNumbers.AddRange(tmpNumbers);
@@ -125,8 +125,8 @@ namespace Sudoku
             {
                 if (cell.pNumbers.Count < smallest && cell.value == EMPTY_CELL)
                     smallest = cell.pNumbers.Count;
+                step++;
             }
-
             return smallest;
         }
 
@@ -142,10 +142,42 @@ namespace Sudoku
                     if (IsPositionSuitable(y, x, tmpHolder, board) && tmpHolder != EMPTY_CELL)
                         board[y, x].value = tmpHolder;
                     else
+                    {
+                        board[y, x].value = tmpHolder;
                         return false;
+                    }
                 }
             }
             return true;
+        }
+
+        private bool SolverMode()
+        {
+            endGame = true;
+            int tmpHolder;
+            for (int y = 0; y < 9; y++)
+            {
+                for (int x = 0; x < 9; x++)
+                {
+                    tmpHolder = field[y, x].value;
+                    field[y, x].value = EMPTY_CELL;
+                    if (IsPositionSuitable(y, x, tmpHolder, field) || tmpHolder == EMPTY_CELL)
+                        field[y, x].value = tmpHolder;
+                    else
+                    {
+                        field[y, x].value = tmpHolder;
+                        return false;
+                    }
+                }
+            }
+
+            for(int i = 0; i < 25; i++)
+            {
+                if (Solve())
+                    return true;
+            }
+            
+            return false;
         }
     }
 }
