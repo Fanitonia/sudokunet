@@ -77,6 +77,9 @@ namespace Sudoku
             Console.Clear();
             int fieldX = 0, fieldY = 0;
 
+            if(isSolverMode)
+                Console.WriteLine("<-Enter a sudoku puzzle->");
+
             Console.WriteLine("┌───────┬───────┬───────┐");
             // rows of board
             for (int y = 2; y <= 12; y++)
@@ -233,7 +236,6 @@ namespace Sudoku
                         break;
                 }
             }
-
         }
     }
 }
