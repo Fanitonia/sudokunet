@@ -1,38 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SudokuLibrary;
 
-namespace Sudoku
+namespace ConsoleUI
 {
-    public partial class Sudoku
+    internal class Program
     {
-        private Cell[,] field = new Cell[9, 9];
-        private Cell[,] solvedField = new Cell[9, 9];
-        private Stopwatch timer = new Stopwatch();
-        private int step = 0;
-        private bool endGame = false;
-        private readonly ConsoleColor userForeColor = Console.ForegroundColor;
-        private readonly ConsoleColor userBackColor = Console.BackgroundColor;
-        private const int EMPTY_CELL = 0;
-
-        private class Cell
-        {
-            public int value = 0;
-            public bool canChange = true;
-            public List<int> pNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-            
-            public Cell() { }
-            public Cell(int value, List<int> pNumbers, bool canChange)
-            {
-                this.value = value;
-                this.pNumbers.Clear();
-                this.pNumbers.AddRange(pNumbers);
-                this.canChange = canChange;
-            }
-        }
+        public static Sudoku sudoku = new Sudoku();
+        public const int EMPTY_CELL = 0;
+        public static ConsoleColor userForeColor = Console.ForegroundColor;
+        public static ConsoleColor userBackColor = Console.BackgroundColor;
+        public static bool endGame = false;
 
         private struct Cursor
         {
@@ -40,44 +16,49 @@ namespace Sudoku
             public static int y = 0;
         }
 
-        public void StartGame()
+        static void Main(string[] args)
         {
-            int input;
             do
             {
-                Console.Clear();
-                Console.WriteLine("<---<Sudoku>--->");
-                Console.WriteLine("1. New Game");
-                Console.WriteLine("2. Sudoku Solver");
-            } while (!(int.TryParse(Console.ReadLine(), out input) && (input > 0 && input < 3)));
+                int input;
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("<---<Sudoku>--->");
+                    Console.WriteLine("1. New Game");
+                    Console.WriteLine("2. Sudoku Solver");
+                } while (!(int.TryParse(Console.ReadLine(), out input) && (input > 0 && input < 3)));
 
-            if (input == 1)
-            {
-                GenerateField();
-                do
+                if (input == 1)
                 {
-                    PrintBoard(field, false);
-                    HandleInput(false);
-                } while (true);
-            }
-            else if (input == 2) 
-            {
-                CreateEmptyField();
-                do
+                    sudoku.GeneratePuzzle(34);
+                    do
+                    {
+                        PrintBoard(false);
+                        HandleInput(false);
+                    } while (!endGame);
+                }
+                else if (input == 2)
                 {
-                    PrintBoard(field, true);
-                    HandleInput(true);
-                }while(true);
-            }
+                    sudoku.CreateEmptyField();
+                    do
+                    {
+                        PrintBoard(true);
+                        HandleInput(true);
+                    } while (!endGame);
+                }
+
+                RestartGame();
+            } while(!endGame);
+
         }
 
-        // i can't explain this
-        private void PrintBoard(Cell[,] board, bool isSolverMode)
+        public static void PrintBoard(bool isSolverMode)
         {
             Console.Clear();
-            int fieldX = 0, fieldY = 0;
+            int cordX = 0, cordY = 0;
 
-            if(isSolverMode)
+            if (isSolverMode)
                 Console.WriteLine("<-Enter a sudoku puzzle->");
 
             Console.WriteLine("┌───────┬───────┬───────┐");
@@ -102,7 +83,7 @@ namespace Sudoku
                         continue;
                     }
 
-                    if(x % 2 == 0)
+                    if (x % 2 == 0)
                     {
                         Console.Write(" ");
                         continue;
@@ -110,118 +91,122 @@ namespace Sudoku
 
                     if (x % 2 == 1)
                     {
-                        if(fieldY == Cursor.y && fieldX == Cursor.x && endGame != true)
+                        if (cordY == Cursor.y && cordX == Cursor.x && !endGame)
                         {
                             Console.BackgroundColor = ConsoleColor.White;
                             Console.Write(" ");
                             Console.BackgroundColor = userBackColor;
                         }
-                        else if (board[fieldY, fieldX].value != EMPTY_CELL)
+                        else if (sudoku.GetCellValue(cordX, cordY, endGame) != EMPTY_CELL)
                         {
-                            if (board[fieldY, fieldX].canChange && !isSolverMode)
+                            if (sudoku.CanCellChange(cordX,cordY) && !isSolverMode)
+                                Console.ForegroundColor = ConsoleColor.Red;
+                            else if (isSolverMode && sudoku.CanCellChange(cordX,cordY))
                                 Console.ForegroundColor = ConsoleColor.Red;
 
-                            Console.Write(board[fieldY, fieldX].value);
+                            Console.Write(sudoku.GetCellValue(cordX, cordY, endGame));
                             Console.ForegroundColor = userForeColor;
                         }
                         else
                             Console.Write(" ");
 
-                        fieldX++;
+                        cordX++;
                     }
                 }
                 if (y % 4 != 1)
-                    fieldY++;
+                    cordY++;
 
-                fieldX = 0;
+                cordX = 0;
                 Console.WriteLine();
             }
             Console.WriteLine("└───────┴───────┴───────┘");
 
             Console.WriteLine();
-            if(!endGame)
+            if (!endGame)
                 Console.WriteLine("Move -> UP, DOWN, RIGHT, LEFT arrow buttons\nPick Number -> 1-9\nDelete Number -> Del\nSolve -> S\nClose -> Q");
         }
 
-        private void HandleInput(bool isSolverMode)
+        public static void HandleInput(bool isSolverMode)
         {
             ConsoleKeyInfo input;
             input = Console.ReadKey(true);
 
-            if(char.IsNumber(input.KeyChar) && field[Cursor.y, Cursor.x].canChange)
+            if (char.IsNumber(input.KeyChar))
             {
-                field[Cursor.y, Cursor.x].value = (int) char.GetNumericValue(input.KeyChar);
+                sudoku.SetCellValue(Cursor.x, Cursor.y, (int)char.GetNumericValue(input.KeyChar));
                 return;
             }
+
             switch (input.Key)
             {
                 case ConsoleKey.UpArrow:
-                    if(Cursor.y > 0)
+                    if (Cursor.y > 0)
                         Cursor.y--;
                     break;
                 case ConsoleKey.DownArrow:
-                    if(Cursor.y < 8)
+                    if (Cursor.y < 8)
                         Cursor.y++;
                     break;
                 case ConsoleKey.LeftArrow:
-                    if(Cursor.x > 0)
+                    if (Cursor.x > 0)
                         Cursor.x--;
                     break;
                 case ConsoleKey.RightArrow:
-                    if(Cursor.x < 8)
+                    if (Cursor.x < 8)
                         Cursor.x++;
                     break;
                 case ConsoleKey.Delete:
-                    if(field[Cursor.y, Cursor.x].canChange)
-                        field[Cursor.y, Cursor.x].value = 0;
+                    sudoku.DeleteCellValue(Cursor.x, Cursor.y);
                     break;
                 case ConsoleKey.Q:
                     Environment.Exit(0);
                     break;
                 case ConsoleKey.S:
                     if (!isSolverMode)
-                        EndGame();
+                    {
+                        EndGame(false);
+                        return;
+                    }
+                        
                     else
                     {
-                        if(SolverMode())
-                            EndGame();
+                        if (sudoku.TrySolve(10))
+                        {
+                            EndGame(true);
+                            return;
+                        }
                         else
                         {
-                            PrintBoard(field, true);
+                            PrintBoard(true);
+                            endGame = true;
                             Console.WriteLine("There is no solution.");
-                            QuitOrRestart();
+                            return;
                         }
                     }
-                    break;
                 default:
                     break;
             }
 
-            if (IsSudokuValid(field))
+            if (sudoku.IsSudokuSolved())
                 WinGame();
-            else if (endGame)
-                EndGame();
         }
 
-        private void EndGame()
+        public static void EndGame(bool isSolverMode)
         {
             endGame = true;
-            PrintBoard(solvedField, false);
-            Console.WriteLine($"Sudoku solved in {timer.ElapsedMilliseconds} ms\nTotal Steps: {step}");
-            QuitOrRestart();
+            PrintBoard(isSolverMode);
+            Console.WriteLine($"Sudoku solved in {sudoku.SolvedTime} ms\nTotal Steps: {sudoku.SolvedStep}");
         }
 
-        private void WinGame()
+        public static void WinGame()
         {
             endGame = true;
-            PrintBoard(field, false);
+            PrintBoard(false);
             Console.WriteLine("\n     YOU DID WIN!!!");
-            QuitOrRestart();
         }
 
-        private void QuitOrRestart()
+        public static void RestartGame()
         {
-            endGame = false;
             Console.WriteLine("\nPress Enter to restart or Q to quit.");
             while (true)
             {
@@ -229,11 +214,10 @@ namespace Sudoku
                 switch (key.Key)
                 {
                     case ConsoleKey.Enter:
-                        StartGame(); 
-                        break;
+                        endGame = false;
+                        return;
                     case ConsoleKey.Q:
-                        Environment.Exit(0);
-                        break;
+                        return;
                 }
             }
         }

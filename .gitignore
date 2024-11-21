@@ -1,3 +1,5 @@
 /.vs
-/src/bin
-/src/obj
+/ConsoleUI/bin
+/ConsoleUI/obj
+/SudokuLibrary/bin
+/SudokuLibrary/obj
