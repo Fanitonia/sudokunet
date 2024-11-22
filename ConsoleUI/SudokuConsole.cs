@@ -2,7 +2,7 @@
 
 namespace ConsoleUI
 {
-    internal class Program
+    internal class SudokuConsole
     {
         public static Sudoku sudoku = new Sudoku();
         public const int EMPTY_CELL = 0;
@@ -40,7 +40,7 @@ namespace ConsoleUI
                 }
                 else if (input == 2)
                 {
-                    sudoku.CreateEmptyField();
+                    sudoku.CreateEmptyBoard();
                     do
                     {
                         PrintBoard(true);
