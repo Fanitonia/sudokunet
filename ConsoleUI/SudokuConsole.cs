@@ -4,11 +4,10 @@ namespace ConsoleUI
 {
     internal class SudokuConsole
     {
-        public static Sudoku sudoku = new Sudoku();
         public const int EMPTY_CELL = 0;
-        public static ConsoleColor userForeColor = Console.ForegroundColor;
-        public static ConsoleColor userBackColor = Console.BackgroundColor;
         public static bool endGame = false;
+
+        public static SudokuBoard board = new SudokuBoard();
 
         private struct Cursor
         {
@@ -20,7 +19,7 @@ namespace ConsoleUI
         {
             do
             {
-                SudokuBoard board = new SudokuBoard();
+                
                 int input;
                 do
                 {
@@ -32,7 +31,7 @@ namespace ConsoleUI
 
                 if (input == 1)
                 {
-                    sudoku.GeneratePuzzle(34);
+                    SudokuSolver.GeneratePuzzle(board, 34);
                     do
                     {
                         PrintBoard(false);
@@ -41,7 +40,7 @@ namespace ConsoleUI
                 }
                 else if (input == 2)
                 {
-                    sudoku.CreateEmptyBoard();
+                    SudokuSolver.CreateEmptyBoard(board);
                     do
                     {
                         PrintBoard(true);
@@ -56,6 +55,9 @@ namespace ConsoleUI
 
         public static void PrintBoard(bool isSolverMode)
         {
+            ConsoleColor userForeColor = Console.ForegroundColor;
+            ConsoleColor userBackColor = Console.BackgroundColor;
+
             Console.Clear();
             int cordX = 0, cordY = 0;
 
@@ -98,14 +100,14 @@ namespace ConsoleUI
                             Console.Write(" ");
                             Console.BackgroundColor = userBackColor;
                         }
-                        else if (sudoku.GetCellValue(cordX, cordY, endGame) != EMPTY_CELL)
+                        else if (board.GetCellValue(cordX, cordY, endGame) != EMPTY_CELL)
                         {
-                            if (sudoku.CanCellChange(cordX,cordY) && !isSolverMode)
+                            if (board.CanCellChange(cordX,cordY) && !isSolverMode)
                                 Console.ForegroundColor = ConsoleColor.Red;
-                            else if (isSolverMode && sudoku.CanCellChange(cordX,cordY))
+                            else if (isSolverMode && board.CanCellChange(cordX,cordY))
                                 Console.ForegroundColor = ConsoleColor.Red;
 
-                            Console.Write(sudoku.GetCellValue(cordX, cordY, endGame));
+                            Console.Write(board.GetCellValue(cordX, cordY, endGame));
                             Console.ForegroundColor = userForeColor;
                         }
                         else
@@ -134,7 +136,7 @@ namespace ConsoleUI
 
             if (char.IsNumber(input.KeyChar))
             {
-                sudoku.SetCellValue(Cursor.x, Cursor.y, (int)char.GetNumericValue(input.KeyChar));
+                board.SetCellValue(Cursor.x, Cursor.y, (int)char.GetNumericValue(input.KeyChar));
                 return;
             }
 
@@ -157,7 +159,7 @@ namespace ConsoleUI
                         Cursor.x++;
                     break;
                 case ConsoleKey.Delete:
-                    sudoku.DeleteCellValue(Cursor.x, Cursor.y);
+                    board.DeleteCellValue(Cursor.x, Cursor.y);
                     break;
                 case ConsoleKey.Q:
                     Environment.Exit(0);
@@ -171,7 +173,7 @@ namespace ConsoleUI
                         
                     else
                     {
-                        if (sudoku.TrySolve(10))
+                        if (SudokuSolver.TrySolve(board, 10))
                         {
                             EndGame(true);
                             return;
@@ -188,7 +190,7 @@ namespace ConsoleUI
                     break;
             }
 
-            if (sudoku.IsSudokuSolved())
+            if (SudokuSolver.IsSudokuSolved(board))
                 WinGame();
         }
 
@@ -196,7 +198,7 @@ namespace ConsoleUI
         {
             endGame = true;
             PrintBoard(isSolverMode);
-            Console.WriteLine($"Sudoku solved in {sudoku.SolvedTime} ms\nTotal Steps: {sudoku.SolvedStep}");
+            Console.WriteLine($"Sudoku solved in {board.SolvedTime} ms\nTotal Steps: {board.SolvedStep}");
         }
 
         public static void WinGame()

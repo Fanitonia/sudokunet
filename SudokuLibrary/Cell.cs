@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SudokuLibrary
+﻿namespace SudokuLibrary
 {
-    public class Cell
+    internal class Cell
     {
         public int value = 0;                                       // value of the cell (0 means empty)
         public bool canChange = true;                               // 

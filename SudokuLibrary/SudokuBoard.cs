@@ -3,29 +3,43 @@ namespace SudokuLibrary
 {
     public class SudokuBoard
     {
-        internal Cell[,] mainField = new Cell[9, 9];
-        public Cell[,] solvedField = new Cell[9, 9];
-
         private const int EMPTY_CELL = 0;
 
+        internal Cell[,] mainField = new Cell[9, 9];
+        internal Cell[,] solvedField = new Cell[9, 9];
+
+        private int solvedTime = 0;
+        private int solvedStep = 0;
+
+        public int SolvedTime { get { return solvedTime; } internal set { solvedTime = value; } }
+        public int SolvedStep { get { return solvedStep; } internal set { solvedStep = value; } }
+
+
+
+        /// <summary>
+        /// Creating a new empty Sudoku board.
+        /// </summary>
         public SudokuBoard() 
         {
-            Sudoku.CreateEmptyBoard(this);
+            SudokuSolver.CreateEmptyBoard(this);
         }
 
+        /// <summary>
+        /// Creating a new Sudoku puzzle with specified number of puzzles
+        /// </summary>
+        /// <param name="clues"></param>
         public SudokuBoard(int clues)
         {
-            Sudoku.GeneratePuzzle(this, clues);
+            SudokuSolver.GeneratePuzzle(this, clues);
         }
 
-        #region Cell Methods
         /// <summary>
         /// Sets the value of a specified cell.
         /// </summary>
         /// <returns>False if the cell cannot be changed. Otherwise true</returns>
         public bool SetCellValue(int cordX, int cordY, int value)
         {
-            if (value > 9 || value < 1)
+            if (value > 9 || value < 0)
                 throw new Exception("Value is invalid (it must be between 1-9)");
 
             if (!IsCordValid(cordX, cordY))
@@ -114,18 +128,10 @@ namespace SudokuLibrary
             return emptyCell;
         }
 
-        #endregion
 
-        private bool IsCordValid(int cordX, int cordY)
-        {
-            if (cordX > 8 || cordX < 0)
-                return false;
-            else if (cordY > 8 || cordY < 0)
-                return false;
-
-            return true;
-        }
-
+        /// <summary>
+        /// Prints the Sudoku puzzle in a formatted layout. 
+        /// </summary>
         public void PrintToConsole(bool printSolvedBoard)
         {
             ConsoleColor userForeColor = Console.ForegroundColor;
@@ -190,5 +196,17 @@ namespace SudokuLibrary
             }
             Console.WriteLine("└───────┴───────┴───────┘");
         }
+
+        private bool IsCordValid(int cordX, int cordY)
+        {
+            if (cordX > 8 || cordX < 0)
+                return false;
+            else if (cordY > 8 || cordY < 0)
+                return false;
+
+            return true;
+        }
+
+        
     }
 }

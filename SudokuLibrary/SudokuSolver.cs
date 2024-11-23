@@ -1,54 +1,13 @@
 ﻿using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SudokuLibrary
 {
-    public class Sudoku
+    public class SudokuSolver
     {
         private static Stopwatch timer = new Stopwatch();
         private static int solveStep = 0;
 
         private const int EMPTY_CELL = 0;
-
-        public static long SolvedTime { get { return timer.ElapsedMilliseconds; } }
-        public static int SolvedStep { get { return solveStep; } }
-
-        // updates potential list of a specific cell
-        private static void UpdateCellPotentials(int cordX, int cordY, Cell[,] field)
-        {
-            List<int> tmpNumbers = new List<int>();
-            for (int testValue = 1; testValue <= 9; testValue++)
-            {
-                if (IsPositionSuitable(cordX, cordY, testValue, field))
-                    tmpNumbers.Add(testValue);
-                solveStep++;
-            }
-            field[cordY, cordX].pNumbers.Clear();
-            field[cordY, cordX].pNumbers.AddRange(tmpNumbers);
-        }
-
-        // updates the potential list of alll cells in the field
-        private static void UpdateAllPotentials(Cell[,] field)
-        {
-            for (int cordY = 0; cordY < 9; cordY++)
-            {
-                for (int cordX = 0; cordX < 9; cordX++)
-                    UpdateCellPotentials(cordX, cordY, field);
-            }
-        }
-
-        // finds the cell with the fewest potential numbers (returns the number count)
-        private static int FindSmallestPotential(Cell[,] field)
-        {
-            int smallest = 9;
-            foreach (Cell cell in field)
-            {
-                if (cell.pNumbers.Count < smallest && cell.value == EMPTY_CELL)
-                    smallest = cell.pNumbers.Count;
-                solveStep++;
-            }
-            return smallest;
-        }
 
         #region Sudoku Creation Methods
         /// <summary>
@@ -276,9 +235,49 @@ namespace SudokuLibrary
             } while (!IsSudokuSolved(board.solvedField));
 
             timer.Stop();
+
+            board.SolvedTime = (int)timer.ElapsedMilliseconds;
+            board.SolvedStep = solveStep;
             return true;
         }
         #endregion
+
+        // updates potential list of a specific cell
+        private static void UpdateCellPotentials(int cordX, int cordY, Cell[,] field)
+        {
+            List<int> tmpNumbers = new List<int>();
+            for (int testValue = 1; testValue <= 9; testValue++)
+            {
+                if (IsPositionSuitable(cordX, cordY, testValue, field))
+                    tmpNumbers.Add(testValue);
+                solveStep++;
+            }
+            field[cordY, cordX].pNumbers.Clear();
+            field[cordY, cordX].pNumbers.AddRange(tmpNumbers);
+        }
+
+        // updates the potential list of alll cells in the field
+        private static void UpdateAllPotentials(Cell[,] field)
+        {
+            for (int cordY = 0; cordY < 9; cordY++)
+            {
+                for (int cordX = 0; cordX < 9; cordX++)
+                    UpdateCellPotentials(cordX, cordY, field);
+            }
+        }
+
+        // finds the cell with the fewest potential numbers (returns the number count)
+        private static int FindSmallestPotential(Cell[,] field)
+        {
+            int smallest = 9;
+            foreach (Cell cell in field)
+            {
+                if (cell.pNumbers.Count < smallest && cell.value == EMPTY_CELL)
+                    smallest = cell.pNumbers.Count;
+                solveStep++;
+            }
+            return smallest;
+        }
 
         private static bool IsCordValid(int cordX, int cordY)
         {
