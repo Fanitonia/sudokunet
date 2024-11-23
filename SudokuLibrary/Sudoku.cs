@@ -70,36 +70,13 @@ namespace SudokuLibrary
         /// </summary>
         public static void GeneratePuzzle(SudokuBoard board, int clues)
         {
-            Random random = new Random();
-            int cordX, cordY;
-            do
-            {
-                CreateEmptyBoard(board);
-                // this is for creating more randomness
-                for (int i = 0; i < 10; i++)
-                {
-                    do
-                    {
-                        cordY = random.Next(9);
-                        cordX = random.Next(9);
-                    } while (board.mainField[cordY, cordX].value != EMPTY_CELL);
-
-                    try
-                    {
-                        board.mainField[cordY, cordX].value = board.mainField[cordY, cordX].pNumbers[random.Next(board.mainField[cordY, cordX].pNumbers.Count)];
-                        board.mainField[cordY, cordX].canChange = false;
-                    }
-                    catch (Exception)
-                    {
-                        break;
-                    }
-
-                    UpdateAllPotentials(board.mainField);
-                }
-            } while (!Solve(board));
-
             CreateEmptyBoard(board);
-            for(int i = 0; i < clues; i++)
+            while (!Solve(board)) {}
+
+            int cordX, cordY;
+            Random random = new Random();
+
+            for (int i = 0; i < clues; i++)
             {
                 do
                 {
@@ -109,6 +86,7 @@ namespace SudokuLibrary
 
                 board.mainField[cordY, cordX].value = board.solvedField[cordY, cordX].value;
                 board.mainField[cordY, cordX].canChange = false;
+                board.solvedField[cordY, cordX].canChange = false;
             }
         }
 
