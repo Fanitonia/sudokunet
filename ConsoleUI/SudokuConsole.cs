@@ -20,6 +20,7 @@ namespace ConsoleUI
         {
             do
             {
+                SudokuBoard board = new SudokuBoard();
                 int input;
                 do
                 {

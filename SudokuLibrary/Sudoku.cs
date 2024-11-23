@@ -5,159 +5,43 @@ namespace SudokuLibrary
 {
     public class Sudoku
     {
-        private Cell[,] field = new Cell[9, 9];
-        private Cell[,] solvedField = new Cell[9, 9];
-        
-        private Stopwatch timer = new Stopwatch();
-        private int solveStep = 0;
+        private static Stopwatch timer = new Stopwatch();
+        private static int solveStep = 0;
 
         private const int EMPTY_CELL = 0;
-        
 
-        public long SolvedTime { get { return timer.ElapsedMilliseconds; } }
-        public int SolvedStep { get { return solveStep; } }
-
-
-        #region Cell Methods
-        /// <summary>
-        /// Sets the value of a specified cell.
-        /// </summary>
-        /// <returns>False if the cell cannot be changed. Otherwise true</returns>
-        public bool SetCellValue(int cordX, int cordY, int value)
-        {
-            if (value > 9 || value < 1)
-                throw new Exception("Value is invalid (it must be between 1-9)");
-
-            if (!IsCordValid(cordX, cordY))
-                throw new Exception("Coordinates are invalid");
-
-            if (!IsPuzzleExist())
-                throw new Exception("Could not find a Sudoku board.");
-
-            if (field[cordY, cordX].canChange)
-            {
-                field[cordY, cordX].value = value;
-                return true;
-            }
-            else
-                return false;
-        }
-
-        /// <summary>
-        /// Gets the value of a specified cell.
-        /// </summary>
-        public int GetCellValue(int cordX, int cordY, bool getFromSolvedVersion)
-        {
-            if (!IsCordValid(cordX, cordY))
-                throw new Exception("Coordinates are invalid");
-
-            if (!IsPuzzleExist())
-                throw new Exception("Could not find a Sudoku board.");
-
-            if (getFromSolvedVersion)
-            {
-                if (solvedField[0,0] == null)
-                    throw new Exception("There is no solved version of the puzzle");
-                return solvedField[cordY, cordX].value;
-            }
-            else
-                return field[cordY, cordX].value;
-        }
-
-        /// <summary>
-        /// Deletes the value of the specified cell.
-        /// </summary>
-        /// <returns>False if the cell cannot be changed. Otherwise true.</returns>
-        public bool DeleteCellValue(int cordX, int cordY)
-        {
-            if (!IsCordValid(cordX, cordY))
-                throw new Exception("Coordinates are invalid");
-
-            if (!IsPuzzleExist())
-                throw new Exception("Could not find a Sudoku board.");
-
-            if (field[cordY, cordX].canChange)
-            {
-                field[cordY, cordX].value = 0;
-                return true;
-            }
-            else
-                return false;
-        }
-
-        /// <summary>
-        /// Checks if the cell is part of the puzzle and cannot be changed by the user.
-        /// </summary>
-        public bool CanCellChange(int cordX, int cordY)
-        {
-            if (!IsCordValid(cordX, cordY))
-                throw new Exception("Coordinates are invalid");
-
-            if (!IsPuzzleExist())
-                throw new Exception("Could not find a Sudoku board.");
-
-            return field[cordY, cordX].canChange;
-        }
-
-        /// <summary>
-        /// Returns the count of empty cells on the board.
-        /// </summary>
-        public int GetNumberOfEmptyCells()
-        {
-            if (!IsPuzzleExist())
-                throw new Exception("Could not find a Sudoku board.");
-
-            return GetNumberOfEmptyCells(field);
-        }
-
-        // returns the count of empty cells on the board
-        private int GetNumberOfEmptyCells(Cell[,] board)
-        {
-            int emptyCell = 0;
-
-            for (int cordY = 0; cordY < 9; cordY++)
-            {
-                for (int cordX = 0; cordX < 9; cordX++)
-                {
-                    if (board[cordY, cordX].value == 0)
-                    {
-                        emptyCell++;
-                    }
-                }
-            }
-
-            return emptyCell;
-        }
+        public static long SolvedTime { get { return timer.ElapsedMilliseconds; } }
+        public static int SolvedStep { get { return solveStep; } }
 
         // updates potential list of a specific cell
-        private void UpdateCellPotentials(int cordX, int cordY, Cell[,] board)
+        private static void UpdateCellPotentials(int cordX, int cordY, Cell[,] field)
         {
             List<int> tmpNumbers = new List<int>();
             for (int testValue = 1; testValue <= 9; testValue++)
             {
-                if (IsPositionSuitable(cordX, cordY, testValue, board))
+                if (IsPositionSuitable(cordX, cordY, testValue, field))
                     tmpNumbers.Add(testValue);
                 solveStep++;
             }
-            board[cordY, cordX].pNumbers.Clear();
-            board[cordY, cordX].pNumbers.AddRange(tmpNumbers);
+            field[cordY, cordX].pNumbers.Clear();
+            field[cordY, cordX].pNumbers.AddRange(tmpNumbers);
         }
 
         // updates the potential list of alll cells in the field
-        private void UpdateAllPotentials(Cell[,] board)
+        private static void UpdateAllPotentials(Cell[,] field)
         {
             for (int cordY = 0; cordY < 9; cordY++)
             {
                 for (int cordX = 0; cordX < 9; cordX++)
-                    UpdateCellPotentials(cordX, cordY, board);
+                    UpdateCellPotentials(cordX, cordY, field);
             }
         }
 
         // finds the cell with the fewest potential numbers (returns the number count)
-        private int FindSmallestPotential(Cell[,] board)
+        private static int FindSmallestPotential(Cell[,] field)
         {
             int smallest = 9;
-            foreach (Cell cell in board)
+            foreach (Cell cell in field)
             {
                 if (cell.pNumbers.Count < smallest && cell.value == EMPTY_CELL)
                     smallest = cell.pNumbers.Count;
@@ -165,19 +49,18 @@ namespace SudokuLibrary
             }
             return smallest;
         }
-        #endregion
 
         #region Sudoku Creation Methods
         /// <summary>
         /// Creates an empty Sudoku board (cells are considered empty if their value is 0).
         /// </summary>
-        public void CreateEmptyBoard()
+        public static void CreateEmptyBoard(SudokuBoard board)
         {
             for (int cordY = 0; cordY < 9; cordY++)
             {
                 for (int cordX = 0; cordX < 9; cordX++)
                 {
-                    field[cordY, cordX] = new Cell();
+                    board.mainField[cordY, cordX] = new Cell();
                 }
             }
         }
@@ -185,13 +68,13 @@ namespace SudokuLibrary
         /// <summary>
         /// Generates a Sudoku puzzle with the specified number of clues.
         /// </summary>
-        public void GeneratePuzzle(int clues)
+        public static void GeneratePuzzle(SudokuBoard board, int clues)
         {
             Random random = new Random();
             int cordX, cordY;
             do
             {
-                CreateEmptyBoard();
+                CreateEmptyBoard(board);
                 // this is for creating more randomness
                 for (int i = 0; i < 10; i++)
                 {
@@ -199,37 +82,37 @@ namespace SudokuLibrary
                     {
                         cordY = random.Next(9);
                         cordX = random.Next(9);
-                    } while (field[cordY, cordX].value != EMPTY_CELL);
+                    } while (board.mainField[cordY, cordX].value != EMPTY_CELL);
 
                     try
                     {
-                        field[cordY, cordX].value = field[cordY, cordX].pNumbers[random.Next(field[cordY, cordX].pNumbers.Count)];
-                        field[cordY, cordX].canChange = false;
+                        board.mainField[cordY, cordX].value = board.mainField[cordY, cordX].pNumbers[random.Next(board.mainField[cordY, cordX].pNumbers.Count)];
+                        board.mainField[cordY, cordX].canChange = false;
                     }
                     catch (Exception)
                     {
                         break;
                     }
 
-                    UpdateAllPotentials(field);
+                    UpdateAllPotentials(board.mainField);
                 }
-            } while (!Solve());
+            } while (!Solve(board));
 
-            CreateEmptyBoard();
+            CreateEmptyBoard(board);
             for(int i = 0; i < clues; i++)
             {
                 do
                 {
                     cordY = random.Next(9);
                     cordX = random.Next(9);
-                } while (field[cordY, cordX].value != EMPTY_CELL);
+                } while (board.mainField[cordY, cordX].value != EMPTY_CELL);
 
-                field[cordY, cordX].value = solvedField[cordY, cordX].value;
-                field[cordY, cordX].canChange = false;
+                board.mainField[cordY, cordX].value = board.solvedField[cordY, cordX].value;
+                board.mainField[cordY, cordX].canChange = false;
             }
         }
 
-        private void CopyAndSetBoard(Cell[,] original, Cell[,] copy)
+        private static void CopyAndSetBoard(Cell[,] original, Cell[,] copy)
         {
             bool canChange;
             for (int cordY = 0; cordY < 9; cordY++)
@@ -255,12 +138,12 @@ namespace SudokuLibrary
         /// Checks if a value can be placed in the specified position of the Sudoku puzzle. 
         /// </summary>
         /// <returns>Returns false if the value cannot be placed at the specified position, otherwise true.</returns>
-        public bool IsPositionSuitable(int cordX, int cordY, int value)
+        public static bool IsPositionSuitable(SudokuBoard board, int cordX, int cordY, int value)
         {
-            return IsPositionSuitable(cordX, cordY, value, field);
+            return IsPositionSuitable(cordX, cordY, value, board.mainField);
         }
 
-        private bool IsPositionSuitable(int cordX, int cordY, int value, Cell[,] board)
+        private static bool IsPositionSuitable(int cordX, int cordY, int value, Cell[,] field)
         {
             if (!IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
@@ -270,10 +153,10 @@ namespace SudokuLibrary
             // checks the column and the row of the position
             for (int i = 0; i < 9; i++)
             {
-                if (board[cordY, i].value == value)
+                if (field[cordY, i].value == value)
                     return false;
 
-                else if (board[i, cordX].value == value)
+                else if (field[i, cordX].value == value)
                     return false;
                 solveStep++;
             }
@@ -287,7 +170,7 @@ namespace SudokuLibrary
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    if (board[rowStart + i, columnStart + j].value == value)
+                    if (field[rowStart + i, columnStart + j].value == value)
                         return false;
                     solveStep++;
                 }
@@ -299,25 +182,25 @@ namespace SudokuLibrary
         /// <summary>
         /// Checks if Sudoku solved correctly.
         /// </summary>
-        public bool IsSudokuSolved()
+        public static bool IsSudokuSolved(SudokuBoard board)
         {
-            return IsSudokuSolved(field);
+            return IsSudokuSolved(board.mainField);
         }
 
-        private bool IsSudokuSolved(Cell[,] board)
+        private static bool IsSudokuSolved(Cell[,] field)
         {
             int tmpHolder;
             for (int cordY = 0; cordY < 9; cordY++)
             {
                 for (int cordX = 0; cordX < 9; cordX++)
                 {
-                    tmpHolder = board[cordY, cordX].value;
-                    board[cordY, cordX].value = EMPTY_CELL;
-                    if (IsPositionSuitable(cordX, cordY, tmpHolder, board) && tmpHolder != EMPTY_CELL)
-                        board[cordY, cordX].value = tmpHolder;
+                    tmpHolder = field[cordY, cordX].value;
+                    field[cordY, cordX].value = EMPTY_CELL;
+                    if (IsPositionSuitable(cordX, cordY, tmpHolder, field) && tmpHolder != EMPTY_CELL)
+                        field[cordY, cordX].value = tmpHolder;
                     else
                     {
-                        board[cordY, cordX].value = tmpHolder;
+                        field[cordY, cordX].value = tmpHolder;
                         return false;
                     }
                 }
@@ -328,20 +211,20 @@ namespace SudokuLibrary
         /// <summary>
         /// Checks if the current state of the puzzle is valid.
         /// </summary>
-        public bool IsSudokuValid()
+        public static bool IsSudokuValid(SudokuBoard board)
         {
             int tmpHolder;
             for (int cordY = 0; cordY < 9; cordY++)
             {
                 for (int cordX = 0; cordX < 9; cordX++)
                 {
-                    tmpHolder = field[cordY, cordX].value;
-                    field[cordY, cordX].value = EMPTY_CELL;
-                    if (tmpHolder == EMPTY_CELL || IsPositionSuitable(cordX, cordY, tmpHolder))
-                        field[cordY, cordX].value = tmpHolder;
+                    tmpHolder = board.mainField[cordY, cordX].value;
+                    board.mainField[cordY, cordX].value = EMPTY_CELL;
+                    if (tmpHolder == EMPTY_CELL || IsPositionSuitable(board, cordX, cordY, tmpHolder))
+                        board.mainField[cordY, cordX].value = tmpHolder;
                     else
                     {
-                        field[cordY, cordX].value = tmpHolder;
+                        board.mainField[cordY, cordX].value = tmpHolder;
                         return false;
                     }
                 }
@@ -355,17 +238,17 @@ namespace SudokuLibrary
         /// <summary>
         /// Attempts to solve the puzzle for specified number of attempts.
         /// </summary>
-        public bool TrySolve(int attempts)
+        public static bool TrySolve(SudokuBoard board, int attempts)
         {
             if (attempts < 1)
                 throw new Exception("Attempts cannot be smaller than 1");
 
-            if (!IsSudokuValid())
+            if (!IsSudokuValid(board))
                 return false;
 
             for (int i = 0; i < attempts; i++)
             {
-                if (Solve())
+                if (Solve(board))
                     return true;
             }
 
@@ -375,25 +258,25 @@ namespace SudokuLibrary
         /// <summary>
         /// Attempts to solve the puzzle once.
         /// </summary>
-        public bool TrySolve()
+        public static bool TrySolve(SudokuBoard board)
         {
-            return TrySolve(1);
+            return TrySolve(board, 1);
         }
 
         // Copies the field to solvedField and tries to solve it.
-        private bool Solve()
+        private static bool Solve(SudokuBoard board)
         {
             Random random = new Random();
-            CopyAndSetBoard(field, solvedField);
+            CopyAndSetBoard(board.mainField, board.solvedField);
 
             solveStep = 0;
             timer.Restart();
             timer.Start();
-            UpdateAllPotentials(solvedField);
+            UpdateAllPotentials(board.solvedField);
 
             do
             {
-                foreach (Cell cell in solvedField)
+                foreach (Cell cell in board.solvedField)
                 {
                     if (cell.pNumbers.Count == 0 && cell.value == EMPTY_CELL)
                         return false;
@@ -401,26 +284,25 @@ namespace SudokuLibrary
                     solveStep++;
                 }
 
-                foreach (Cell cell in solvedField)
+                foreach (Cell cell in board.solvedField)
                 {
-                    if (cell.pNumbers.Count == FindSmallestPotential(solvedField) && cell.value == EMPTY_CELL)
+                    if (cell.pNumbers.Count == FindSmallestPotential(board.solvedField) && cell.value == EMPTY_CELL)
                     {
                         cell.value = cell.pNumbers[random.Next(cell.pNumbers.Count)];
-                        UpdateAllPotentials(solvedField);
+                        UpdateAllPotentials(board.solvedField);
                         break;
                     }
 
                     solveStep++;
                 }
-            } while (!IsSudokuSolved(solvedField));
+            } while (!IsSudokuSolved(board.solvedField));
 
             timer.Stop();
             return true;
         }
         #endregion
 
-        #region Others
-        private bool IsCordValid(int cordX, int cordY)
+        private static bool IsCordValid(int cordX, int cordY)
         {
             if (cordX > 8 || cordX < 0)
                 return false;
@@ -429,15 +311,5 @@ namespace SudokuLibrary
 
             return true;
         }
-
-        private bool IsPuzzleExist()
-        {
-            if (field[0, 0] == null)
-                return false;
-            else
-                return true;
-        }
-        #endregion
-
     }
 }
