@@ -14,8 +14,6 @@ namespace SudokuLibrary
         public int SolvedTime { get { return solvedTime; } internal set { solvedTime = value; } }
         public int SolvedStep { get { return solvedStep; } internal set { solvedStep = value; } }
 
-
-
         /// <summary>
         /// Creating a new empty Sudoku board.
         /// </summary>
@@ -25,7 +23,7 @@ namespace SudokuLibrary
         }
 
         /// <summary>
-        /// Creating a new Sudoku puzzle with specified number of puzzles
+        /// Creating a new Sudoku puzzle with specified number of clues
         /// </summary>
         /// <param name="clues"></param>
         public SudokuBoard(int clues)
@@ -42,7 +40,7 @@ namespace SudokuLibrary
             if (value > 9 || value < 0)
                 throw new Exception("Value is invalid (it must be between 1-9)");
 
-            if (!IsCordValid(cordX, cordY))
+            if (!SudokuSolver.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             if (mainField[cordY, cordX].canChange)
@@ -59,7 +57,7 @@ namespace SudokuLibrary
         /// </summary>
         public int GetCellValue(int cordX, int cordY, bool getFromSolvedVersion)
         {
-            if (!IsCordValid(cordX, cordY))
+            if (!SudokuSolver.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             if (getFromSolvedVersion)
@@ -78,7 +76,7 @@ namespace SudokuLibrary
         /// <returns>False if the cell cannot be changed. Otherwise true.</returns>
         public bool DeleteCellValue(int cordX, int cordY)
         {
-            if (!IsCordValid(cordX, cordY))
+            if (!SudokuSolver.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             if (mainField[cordY, cordX].canChange)
@@ -95,7 +93,7 @@ namespace SudokuLibrary
         /// </summary>
         public bool CanCellChange(int cordX, int cordY)
         {
-            if (!IsCordValid(cordX, cordY))
+            if (!SudokuSolver.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             return mainField[cordY, cordX].canChange;
@@ -127,7 +125,6 @@ namespace SudokuLibrary
 
             return emptyCell;
         }
-
 
         /// <summary>
         /// Prints the Sudoku puzzle in a formatted layout. 
@@ -196,17 +193,5 @@ namespace SudokuLibrary
             }
             Console.WriteLine("└───────┴───────┴───────┘");
         }
-
-        private bool IsCordValid(int cordX, int cordY)
-        {
-            if (cordX > 8 || cordX < 0)
-                return false;
-            else if (cordY > 8 || cordY < 0)
-                return false;
-
-            return true;
-        }
-
-        
     }
 }

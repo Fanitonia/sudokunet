@@ -10,6 +10,7 @@ namespace SudokuLibrary
         private const int EMPTY_CELL = 0;
 
         #region Sudoku Creation Methods
+
         /// <summary>
         /// Creates an empty Sudoku board (cells are considered empty if their value is 0).
         /// </summary>
@@ -49,6 +50,8 @@ namespace SudokuLibrary
             }
         }
 
+        // TODO: needs more clear comment
+        // copies the 'mainField' to 'solvedField' and sets the 'canChange' value of the cells
         private static void CopyAndSetBoard(Cell[,] original, Cell[,] copy)
         {
             bool canChange;
@@ -72,7 +75,7 @@ namespace SudokuLibrary
 
         #region Sudoku Validation Methods
         /// <summary>
-        /// Checks if a value can be placed in the specified position of the Sudoku puzzle. 
+        /// Checks whatever a value can be placed in the specified position of the Sudoku puzzle. 
         /// </summary>
         /// <returns>Returns false if the value cannot be placed at the specified position, otherwise true.</returns>
         public static bool IsPositionSuitable(SudokuBoard board, int cordX, int cordY, int value)
@@ -175,6 +178,7 @@ namespace SudokuLibrary
         /// <summary>
         /// Attempts to solve the puzzle for specified number of attempts.
         /// </summary>
+        /// <returns>False if it encounters a problem while solving. Otherwise true.</returns>
         public static bool TrySolve(SudokuBoard board, int attempts)
         {
             if (attempts < 1)
@@ -195,12 +199,13 @@ namespace SudokuLibrary
         /// <summary>
         /// Attempts to solve the puzzle once.
         /// </summary>
+        /// <returns>False if it encounters a problem while solving. Otherwise true.</returns>
         public static bool TrySolve(SudokuBoard board)
         {
             return TrySolve(board, 1);
         }
 
-        // Copies the field to solvedField and tries to solve it.
+        // Copies the field to solvedField and tries to solve it. Returns false if it encounters a problem.
         private static bool Solve(SudokuBoard board)
         {
             Random random = new Random();
@@ -279,7 +284,8 @@ namespace SudokuLibrary
             return smallest;
         }
 
-        private static bool IsCordValid(int cordX, int cordY)
+        // // checks if the coordinates are in between 0-8 (inclusive)
+        internal static bool IsCordValid(int cordX, int cordY)
         {
             if (cordX > 8 || cordX < 0)
                 return false;
