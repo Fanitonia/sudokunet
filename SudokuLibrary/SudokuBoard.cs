@@ -19,7 +19,7 @@ namespace SudokuLibrary
         /// </summary>
         public SudokuBoard() 
         {
-            SudokuSolver.CreateEmptyBoard(this);
+            SudokuHandler.InitializeBoard(this);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace SudokuLibrary
         /// <param name="clues"></param>
         public SudokuBoard(int clues)
         {
-            SudokuSolver.GeneratePuzzle(this, clues);
+            SudokuHandler.GeneratePuzzle(this, clues);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace SudokuLibrary
             if (value > 9 || value < 0)
                 throw new Exception("Value is invalid (it must be between 1-9)");
 
-            if (!SudokuSolver.IsCordValid(cordX, cordY))
+            if (!SudokuHandler.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             if (mainField[cordY, cordX].canChange)
@@ -57,7 +57,7 @@ namespace SudokuLibrary
         /// </summary>
         public int GetCellValue(int cordX, int cordY, bool getFromSolvedVersion)
         {
-            if (!SudokuSolver.IsCordValid(cordX, cordY))
+            if (!SudokuHandler.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             if (getFromSolvedVersion)
@@ -76,7 +76,7 @@ namespace SudokuLibrary
         /// <returns>False if the cell cannot be changed. Otherwise true.</returns>
         public bool DeleteCellValue(int cordX, int cordY)
         {
-            if (!SudokuSolver.IsCordValid(cordX, cordY))
+            if (!SudokuHandler.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             if (mainField[cordY, cordX].canChange)
@@ -93,7 +93,7 @@ namespace SudokuLibrary
         /// </summary>
         public bool CanCellChange(int cordX, int cordY)
         {
-            if (!SudokuSolver.IsCordValid(cordX, cordY))
+            if (!SudokuHandler.IsCordValid(cordX, cordY))
                 throw new Exception("Coordinates are invalid");
 
             return mainField[cordY, cordX].canChange;

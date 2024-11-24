@@ -2,7 +2,7 @@
 
 namespace SudokuLibrary
 {
-    public class SudokuSolver
+    public class SudokuHandler
     {
         private static Stopwatch timer = new Stopwatch();
         private static int solveStep = 0;
@@ -14,7 +14,7 @@ namespace SudokuLibrary
         /// <summary>
         /// Creates an empty Sudoku board (cells are considered empty if their value is 0).
         /// </summary>
-        public static void CreateEmptyBoard(SudokuBoard board)
+        public static void InitializeBoard(SudokuBoard board)
         {
             for (int cordY = 0; cordY < 9; cordY++)
             {
@@ -30,7 +30,7 @@ namespace SudokuLibrary
         /// </summary>
         public static void GeneratePuzzle(SudokuBoard board, int clues)
         {
-            CreateEmptyBoard(board);
+            InitializeBoard(board);
             while (!Solve(board)) {}
 
             int cordX, cordY;

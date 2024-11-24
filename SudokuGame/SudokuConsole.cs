@@ -31,7 +31,7 @@ namespace ConsoleUI
 
                 if (input == 1)
                 {
-                    SudokuSolver.GeneratePuzzle(board, 34);
+                    SudokuHandler.GeneratePuzzle(board, 34);
                     do
                     {
                         PrintBoard(false);
@@ -40,7 +40,7 @@ namespace ConsoleUI
                 }
                 else if (input == 2)
                 {
-                    SudokuSolver.CreateEmptyBoard(board);
+                    SudokuHandler.InitializeBoard(board);
                     do
                     {
                         PrintBoard(true);
@@ -173,7 +173,7 @@ namespace ConsoleUI
                         
                     else
                     {
-                        if (SudokuSolver.TrySolve(board, 10))
+                        if (SudokuHandler.TrySolve(board, 10))
                         {
                             EndGame(true);
                             return;
@@ -190,7 +190,7 @@ namespace ConsoleUI
                     break;
             }
 
-            if (SudokuSolver.IsSudokuSolved(board))
+            if (SudokuHandler.IsSudokuSolved(board))
                 WinGame();
         }
 
