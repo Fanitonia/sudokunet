@@ -74,11 +74,7 @@ namespace SudokuLibrary
         #endregion
 
         #region Sudoku Validation Methods
-        /// <summary>
-        /// Checks whatever a value can be placed in the specified position of the Sudoku puzzle. 
-        /// </summary>
-        /// <returns>Returns false if the value cannot be placed at the specified position, otherwise true.</returns>
-        public static bool IsPositionSuitable(SudokuBoard board, int cordX, int cordY, int value)
+        internal static bool IsPositionSuitable(SudokuBoard board, int cordX, int cordY, int value)
         {
             return IsPositionSuitable(cordX, cordY, value, board.mainField);
         }
@@ -143,6 +139,7 @@ namespace SudokuLibrary
                         field[cordY, cordX].value = tmpHolder;
                         return false;
                     }
+                    solveStep++;
                 }
             }
             return true;

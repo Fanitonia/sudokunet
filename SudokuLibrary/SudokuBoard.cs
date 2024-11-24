@@ -14,6 +14,8 @@ namespace SudokuLibrary
         public int SolvedTime { get { return solvedTime; } internal set { solvedTime = value; } }
         public int SolvedStep { get { return solvedStep; } internal set { solvedStep = value; } }
 
+        public int EmptyCellCount { get { return GetNumberOfEmptyCells(mainField); } }
+
         /// <summary>
         /// Creating a new empty Sudoku board.
         /// </summary>
@@ -100,30 +102,12 @@ namespace SudokuLibrary
         }
 
         /// <summary>
-        /// Returns the count of empty cells on the board.
+        /// Checks whatever a value can be placed in the specified position of the Sudoku puzzle. 
         /// </summary>
-        public int GetNumberOfEmptyCells()
+        /// <returns>Returns false if the value cannot be placed at the specified position, otherwise true.</returns>
+        public bool IsCellSuitable(int cordX, int cordY, int value)
         {
-            return GetNumberOfEmptyCells(mainField);
-        }
-
-        // returns the count of empty cells on the board
-        private int GetNumberOfEmptyCells(Cell[,] board)
-        {
-            int emptyCell = 0;
-
-            for (int cordY = 0; cordY < 9; cordY++)
-            {
-                for (int cordX = 0; cordX < 9; cordX++)
-                {
-                    if (board[cordY, cordX].value == 0)
-                    {
-                        emptyCell++;
-                    }
-                }
-            }
-
-            return emptyCell;
+            return SudokuHandler.IsPositionSuitable(this, cordX, cordY, value);
         }
 
         /// <summary>
@@ -192,6 +176,25 @@ namespace SudokuLibrary
                 Console.WriteLine();
             }
             Console.WriteLine("└───────┴───────┴───────┘");
+        }
+
+        // returns the count of empty cells on the board
+        private int GetNumberOfEmptyCells(Cell[,] field)
+        {
+            int emptyCell = 0;
+
+            for (int cordY = 0; cordY < 9; cordY++)
+            {
+                for (int cordX = 0; cordX < 9; cordX++)
+                {
+                    if (field[cordY, cordX].value == 0)
+                    {
+                        emptyCell++;
+                    }
+                }
+            }
+
+            return emptyCell;
         }
     }
 }
