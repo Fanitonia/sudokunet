@@ -182,7 +182,7 @@ namespace ConsoleUI
                         {
                             PrintBoard(true);
                             endGame = true;
-                            Console.WriteLine("There is no solution.");
+                            Console.WriteLine("Couldn't find a solution.");
                             return;
                         }
                     }

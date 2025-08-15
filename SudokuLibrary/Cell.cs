@@ -2,17 +2,25 @@
 {
     internal class Cell
     {
-        public int value = 0;                                       // value of the cell (0 means empty)
-        public bool canChange = true;                               // 
-        public List<int> pNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];    // potential numbers that cell can have (this is for solving and generation algorithms) 
+        // Value of the cell (0 means empty)
+        public int value = 0;
 
+        // List of possible numbers that this cell can hold (1-9)
+        public List<int> potentialValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        // Indicates whether the cell's value can be changed (true for editable, false for fixed cells)
+        public bool canChange = true;
+
+
+        // Default constructor
         public Cell() { }
 
-        public Cell(int value, List<int> pNumbers, bool canChange)
+        // Constructor with value
+        public Cell(int value, List<int> potentialValues, bool canChange)
         {
             this.value = value;
-            this.pNumbers.Clear();
-            this.pNumbers.AddRange(pNumbers);
+            this.potentialValues.Clear();
+            this.potentialValues.AddRange(potentialValues);
             this.canChange = canChange;
         }
     }

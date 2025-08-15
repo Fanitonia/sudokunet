@@ -4,15 +4,16 @@ namespace SudokuLibrary
 {
     public class SudokuHandler
     {
+        private const int EMPTY_CELL = 0;
+
         private static Stopwatch timer = new Stopwatch();
         private static int solveStep = 0;
-
-        private const int EMPTY_CELL = 0;
 
         #region Sudoku Creation Methods
 
         /// <summary>
-        /// Creates an empty Sudoku board (cells are considered empty if their value is 0).
+        /// Initializes the specified Sudoku board by creating a new empty <see cref="Cell"/> for each position
+        /// in the 9x9 grid. All cells are set to empty (value = 0) and marked as editable.
         /// </summary>
         public static void InitializeBoard(SudokuBoard board)
         {
@@ -26,7 +27,7 @@ namespace SudokuLibrary
         }
 
         /// <summary>
-        /// Generates a Sudoku puzzle with the specified number of clues.
+        /// Generates a new Sudoku puzzle on the specified board with the given number of clues.
         /// </summary>
         public static void GeneratePuzzle(SudokuBoard board, int clues)
         {
@@ -50,7 +51,6 @@ namespace SudokuLibrary
             }
         }
 
-        // TODO: needs more clear comment
         // copies the 'mainField' to 'solvedField' and sets the 'canChange' value of the cells
         private static void CopyAndSetBoard(Cell[,] original, Cell[,] copy)
         {
@@ -67,7 +67,7 @@ namespace SudokuLibrary
                     else
                         canChange = true;
 
-                    copy[cordY, cordX] = new Cell(original[cordY, cordX].value, original[cordY, cordX].pNumbers, canChange);
+                    copy[cordY, cordX] = new Cell(original[cordY, cordX].value, original[cordY, cordX].potentialValues, canChange);
                 }
             }
         }
@@ -116,7 +116,7 @@ namespace SudokuLibrary
         }
 
         /// <summary>
-        /// Checks if Sudoku solved correctly.
+        /// Determines whether the Sudoku puzzle is completely and correctly solved.
         /// </summary>
         public static bool IsSudokuSolved(SudokuBoard board)
         {
@@ -146,7 +146,9 @@ namespace SudokuLibrary
         }
 
         /// <summary>
-        /// Checks if the current state of the puzzle is valid.
+        /// Validates the current state of the Sudoku puzzle.
+        /// Returns true if all filled cells do not violate Sudoku rules (no duplicates in any row, column, or 3x3 box).
+        /// Does not require the puzzle to be completely filled or solved.
         /// </summary>
         public static bool IsSudokuValid(SudokuBoard board)
         {
@@ -173,9 +175,9 @@ namespace SudokuLibrary
 
         #region Solving Methods
         /// <summary>
-        /// Attempts to solve the puzzle for specified number of attempts.
+        /// Attempts to solve the given Sudoku puzzle up to the specified number of times.
         /// </summary>
-        /// <returns>False if it encounters a problem while solving. Otherwise true.</returns>
+        /// <returns>Returns true if the puzzle is successfully solved in any attempt; otherwise, returns false..</returns>
         public static bool TrySolve(SudokuBoard board, int attempts)
         {
             if (attempts < 1)
@@ -217,7 +219,7 @@ namespace SudokuLibrary
             {
                 foreach (Cell cell in board.solvedField)
                 {
-                    if (cell.pNumbers.Count == 0 && cell.value == EMPTY_CELL)
+                    if (cell.potentialValues.Count == 0 && cell.value == EMPTY_CELL)
                         return false;
 
                     solveStep++;
@@ -225,9 +227,9 @@ namespace SudokuLibrary
 
                 foreach (Cell cell in board.solvedField)
                 {
-                    if (cell.pNumbers.Count == FindSmallestPotential(board.solvedField) && cell.value == EMPTY_CELL)
+                    if (cell.potentialValues.Count == FindSmallestPotential(board.solvedField) && cell.value == EMPTY_CELL)
                     {
-                        cell.value = cell.pNumbers[random.Next(cell.pNumbers.Count)];
+                        cell.value = cell.potentialValues[random.Next(cell.potentialValues.Count)];
                         UpdateAllPotentials(board.solvedField);
                         break;
                     }
@@ -254,8 +256,8 @@ namespace SudokuLibrary
                     tmpNumbers.Add(testValue);
                 solveStep++;
             }
-            field[cordY, cordX].pNumbers.Clear();
-            field[cordY, cordX].pNumbers.AddRange(tmpNumbers);
+            field[cordY, cordX].potentialValues.Clear();
+            field[cordY, cordX].potentialValues.AddRange(tmpNumbers);
         }
 
         // updates the potential list of alll cells in the field
@@ -274,8 +276,8 @@ namespace SudokuLibrary
             int smallest = 9;
             foreach (Cell cell in field)
             {
-                if (cell.pNumbers.Count < smallest && cell.value == EMPTY_CELL)
-                    smallest = cell.pNumbers.Count;
+                if (cell.potentialValues.Count < smallest && cell.value == EMPTY_CELL)
+                    smallest = cell.potentialValues.Count;
                 solveStep++;
             }
             return smallest;
