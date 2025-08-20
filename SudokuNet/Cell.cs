@@ -1,4 +1,4 @@
-﻿namespace SudokuLibrary
+﻿namespace SudokuNet
 {
     internal class Cell
     {

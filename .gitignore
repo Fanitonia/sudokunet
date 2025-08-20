@@ -1,6 +1,4 @@
 /.vs
-/SudokuGame/bin
-/SudokuGame/obj
-/SudokuLibrary/bin
-/SudokuLibrary/obj
-/SudokuDemo
+bin
+obj
+license

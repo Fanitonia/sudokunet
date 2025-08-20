@@ -1,4 +1,4 @@
-﻿using SudokuLibrary;
+﻿using SudokuNet;
 
 namespace ConsoleUI
 {

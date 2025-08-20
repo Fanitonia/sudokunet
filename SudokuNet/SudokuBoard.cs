@@ -1,5 +1,4 @@
-﻿
-namespace SudokuLibrary
+﻿namespace SudokuNet
 {
     public class SudokuBoard
     {

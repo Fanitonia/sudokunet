@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace SudokuLibrary
+namespace SudokuNet
 {
     public class SudokuHandler
     {
@@ -74,7 +74,7 @@ namespace SudokuLibrary
         #endregion
 
         #region Sudoku Validation Methods
-        internal static bool IsPositionSuitable(SudokuBoard board, int cordX, int cordY, int value)
+        public static bool IsPositionSuitable(SudokuBoard board, int cordX, int cordY, int value)
         {
             return IsPositionSuitable(cordX, cordY, value, board.mainField);
         }
@@ -98,8 +98,8 @@ namespace SudokuLibrary
             }
 
             // finding top left position of the 3x3 are position's part of
-            int rowStart = cordY - (cordY % 3);
-            int columnStart = cordX - (cordX % 3);
+            int rowStart = cordY - cordY % 3;
+            int columnStart = cordX - cordX % 3;
 
             // checks the 3x3 area position's part of
             for (int i = 0; i < 3; i++)
