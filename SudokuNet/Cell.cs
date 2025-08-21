@@ -2,24 +2,23 @@
 {
     internal class Cell
     {
-        // Value of the cell (0 means empty)
-        public int value = 0;
+        public int value;
 
-        // List of possible numbers that this cell can hold (1-9)
-        public List<int> potentialValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        public List<int> potentialValues = new List<int>();
 
-        // Indicates whether the cell's value can be changed (true for editable, false for fixed cells)
-        public bool canChange = true;
+        // Indicates whether the cell's value can be changed.
+        public bool canChange;
 
 
-        // Default constructor
-        public Cell() { }
+        public Cell() { 
+            this.value = 0;
+            this.potentialValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            this.canChange = true;
+        }
 
-        // Constructor with value
         public Cell(int value, List<int> potentialValues, bool canChange)
         {
             this.value = value;
-            this.potentialValues.Clear();
             this.potentialValues.AddRange(potentialValues);
             this.canChange = canChange;
         }
