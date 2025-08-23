@@ -1,4 +1,10 @@
+
 # SudokuLibrary
+>[!CAUTION]
+>This library will be undergoing a major refactoring.
+>The current implementation of this library is outdated and poorly designed.
+>A complete overhaul is in progress.
+
 #### A Sudoku library that can solve, generate, and validate Sudoku puzzles.  
 - The algorithm for solving Sudoku puzzles is inspired by [this video](https://youtu.be/iSdW8OM_b3E?si=rHk5-YVgAfUwlu60). 
 - Generating puzzles is based on Sudoku solving algorithm.
