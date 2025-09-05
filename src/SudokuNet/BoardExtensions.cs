@@ -142,4 +142,23 @@ public static class BoardExtensions
         }
         Console.WriteLine("└───────┴───────┴───────┘");
     }
+
+    public static Board Clone(this Board board)
+    {
+        Board newBoard = new Board();
+
+        for (int cordY = 0; cordY < 9; cordY++)
+        {
+            for (int cordX = 0; cordX < 9; cordX++)
+            {
+                newBoard.field[cordY, cordX] = 
+                    new Cell(
+                    board.field[cordY, cordX].value, 
+                    board.field[cordY, cordX].potentialValues, 
+                    board.field[cordY, cordX].isLocked);
+            }
+        }
+
+        return newBoard;
+    }
 }

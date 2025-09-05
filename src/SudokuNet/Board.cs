@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace SudokuNet;
+﻿namespace SudokuNet;
 
 public class Board
 {
@@ -15,12 +13,6 @@ public class Board
         Sudoku.InitializeBoard(this);
     }
 
-    public Board Clone()
-    {
-        string json = JsonSerializer.Serialize(this);
-        return JsonSerializer.Deserialize<Board>(json)!;
-    }
-
     public bool SetCell(int cordX, int cordY, int value)
     {
         if (value > 9 || value < 0)
@@ -29,7 +21,7 @@ public class Board
         if (!Helper.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
-        if (field[cordY, cordX].isLocked)
+        if (!field[cordY, cordX].isLocked)
         {
             field[cordY, cordX].value = value;
             return true;
@@ -51,7 +43,7 @@ public class Board
         if (!Helper.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
-        if (field[cordY, cordX].isLocked)
+        if (!field[cordY, cordX].isLocked)
         {
             field[cordY, cordX].value = 0;
             return true;
@@ -72,7 +64,6 @@ public class Board
                 }
             }
         }
-
     }
 
     public void Lock(int cordX, int cordY)
@@ -120,7 +111,3 @@ public class Board
         return emptyCell;
     }
 }
-
-
-
-

@@ -19,10 +19,10 @@ public static class Sudoku
 
     public static Board GeneratePuzzle(int clues)
     {
-        Board tmpboard = new Board();
         Board board = new Board();
+        Board solvedBoard = new Board();
 
-        while (!Solve(tmpboard, out board)) { }
+        while (!Solve(board, out solvedBoard)) { }
 
         int cordX, cordY;
         Random random = new Random();
@@ -33,21 +33,24 @@ public static class Sudoku
             {
                 cordY = random.Next(9);
                 cordX = random.Next(9);
-            } while (board.field[cordY, cordX].value != Constants.EMPTY_CELL);
+            } while (solvedBoard.field[cordY, cordX].value == Constants.EMPTY_CELL);
 
-            board.field[cordY, cordX].value = board.field[cordY, cordX].value;
-            board.field[cordY, cordX].isLocked = false;
-            board.field[cordY, cordX].value = Constants.EMPTY_CELL;
+            board.field[cordY, cordX].value = solvedBoard.field[cordY, cordX].value;
+            board.field[cordY, cordX].isLocked = true;
+            solvedBoard.field[cordY, cordX].value = Constants.EMPTY_CELL;
         }
 
         return board;
     }
-    public static bool TrySolve(Board board, out Board solvedBoard, int? attempts)
+
+    public static bool TrySolve(Board board, out Board solvedBoard)
+    {
+        return TrySolve(board, out solvedBoard, 10);
+    }
+
+    public static bool TrySolve(Board board, out Board solvedBoard, int attempts)
     {
         solvedBoard = default;
-
-        if (attempts == null)
-            attempts = 10;
 
         if (attempts < 1)
             throw new Exception("Attempts cannot be smaller than 1");
