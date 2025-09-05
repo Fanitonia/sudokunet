@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuNet", "src\SudokuNet\SudokuNet.csproj", "{8B20C901-CF7F-FE20-2783-819F60241DF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuGame", "src\SudokuGame\SudokuGame.csproj", "{EFE6C8A6-B682-D63F-4773-39211CBBB776}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B20C901-CF7F-FE20-2783-819F60241DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B20C901-CF7F-FE20-2783-819F60241DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B20C901-CF7F-FE20-2783-819F60241DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B20C901-CF7F-FE20-2783-819F60241DF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFE6C8A6-B682-D63F-4773-39211CBBB776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFE6C8A6-B682-D63F-4773-39211CBBB776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFE6C8A6-B682-D63F-4773-39211CBBB776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFE6C8A6-B682-D63F-4773-39211CBBB776}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0906D073-2D2E-4DA8-9B63-3D72BFC92027}
+	EndGlobalSection
+EndGlobal
