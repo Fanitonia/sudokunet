@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<PackageId>SudokuNet</PackageId>
+	<Version>0.8.0</Version>
+	<Authors>OnurG</Authors>
+	<Description>A library that can solve, generate, and validate Sudoku puzzles.</Description>
+	<RepositoryUrl>https://github.com/Fanitonia/SudokuNet</RepositoryUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+</Project>
