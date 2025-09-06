@@ -49,19 +49,19 @@ public class BoardExtensionsTests
     public void IsSudokuSolved_ShouldReturnTrue()
     {
         var board = new Board();
-        board.LoadFromString(ValidSolvedBoardString);
+        board.LoadBoardFrom(ValidSolvedBoardString);
         board.IsSudokuSolved().Should().BeTrue();
     }
 
     [Theory]
     [InlineData(ValidUnsolvedBoardString)]
-    [InlineData(UnvalidSolvedBoardString)] 
+    [InlineData(UnvalidSolvedBoardString)]
     [InlineData(UnvalidUnsolvedBoardString)]
-    [InlineData(EmptyBoardString)] 
+    [InlineData(EmptyBoardString)]
     public void IsSudokuSolved_ShouldReturnFalse(string boardString)
     {
         var board = new Board();
-        board.LoadFromString(boardString);
+        board.LoadBoardFrom(boardString);
         board.IsSudokuSolved().Should().BeFalse();
     }
 
@@ -72,7 +72,7 @@ public class BoardExtensionsTests
     public void IsSudokuValid_ShouldReturnTrue(string boardString)
     {
         var board = new Board();
-        board.LoadFromString(boardString);
+        board.LoadBoardFrom(boardString);
         board.IsSudokuValid().Should().BeTrue();
     }
 
@@ -82,7 +82,7 @@ public class BoardExtensionsTests
     public void IsSudokuValid_ShouldReturnFalse(string boardString)
     {
         var board = new Board();
-        board.LoadFromString(boardString);
+        board.LoadBoardFrom(boardString);
         board.IsSudokuValid().Should().BeFalse();
     }
 

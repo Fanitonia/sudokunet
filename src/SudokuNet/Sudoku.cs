@@ -75,9 +75,6 @@ public static class Sudoku
         Board tmpBoard = board.Clone();
         solvedBoard = default;
 
-        Stopwatch timer = new Stopwatch();
-        timer.Start();
-
         UpdatePotentials(tmpBoard);
 
         do
@@ -99,7 +96,6 @@ public static class Sudoku
             }
         } while (!tmpBoard.IsSudokuSolved());
 
-        timer.Stop();
         solvedBoard = tmpBoard;
         return true;
     }

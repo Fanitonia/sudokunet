@@ -94,9 +94,9 @@ public class Board
         field[cordY, cordX].isLocked = false;
     }
 
-    public void LoadFromString(string boardString)
+    public void LoadBoardFrom(string boardString)
     {
-        if(boardString.Length != 81)
+        if (boardString.Length != 81)
             throw new Exception("Board string is invalid. It's lenght must be 81");
 
         Sudoku.InitializeBoard(this);
