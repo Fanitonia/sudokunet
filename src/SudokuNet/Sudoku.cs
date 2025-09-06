@@ -4,8 +4,6 @@ namespace SudokuNet;
 
 public static class Sudoku
 {
-    private static int step = 0;
-
     public static void InitializeBoard(Board board)
     {
         for (int cordY = 0; cordY < 9; cordY++)
@@ -36,6 +34,7 @@ public static class Sudoku
             } while (solvedBoard.field[cordY, cordX].value == Constants.EMPTY_CELL);
 
             board.field[cordY, cordX].value = solvedBoard.field[cordY, cordX].value;
+            board.field[cordY, cordX].potentialValues = solvedBoard.field[cordY, cordX].potentialValues;
             board.field[cordY, cordX].isLocked = true;
             solvedBoard.field[cordY, cordX].value = Constants.EMPTY_CELL;
         }
@@ -77,10 +76,9 @@ public static class Sudoku
         solvedBoard = default;
 
         Stopwatch timer = new Stopwatch();
-        step = 0;
         timer.Start();
 
-        UpdateAllPotentials(tmpBoard);
+        UpdatePotentials(tmpBoard);
 
         do
         {
@@ -88,7 +86,6 @@ public static class Sudoku
             {
                 if (cell.value == Constants.EMPTY_CELL && cell.potentialValues.Count == 0)
                     return false;
-                step++;
             }
 
             foreach (Cell cell in tmpBoard.field)
@@ -96,10 +93,9 @@ public static class Sudoku
                 if (cell.value == Constants.EMPTY_CELL && cell.potentialValues.Count == FindSmallestPotential(tmpBoard))
                 {
                     cell.value = cell.potentialValues[random.Next(cell.potentialValues.Count)];
-                    UpdateAllPotentials(tmpBoard);
+                    UpdatePotentials(tmpBoard);
                     break;
                 }
-                step++;
             }
         } while (!tmpBoard.IsSudokuSolved());
 
@@ -108,7 +104,7 @@ public static class Sudoku
         return true;
     }
 
-    private static void UpdateAllPotentials(Board board)
+    public static void UpdatePotentials(Board board)
     {
         for (int cordY = 0; cordY < 9; cordY++)
         {
@@ -124,7 +120,6 @@ public static class Sudoku
         {
             if (board.IsPositionSuitable(cordX, cordY, testValue))
                 tmpNumbers.Add(testValue);
-            step++;
         }
         board.field[cordY, cordX].potentialValues.Clear();
         board.field[cordY, cordX].potentialValues.AddRange(tmpNumbers);

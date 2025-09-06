@@ -99,6 +99,7 @@ public class Board
         if(boardString.Length != 81)
             throw new Exception("Board string is invalid. It's lenght must be 81");
 
+        Sudoku.InitializeBoard(this);
         for (int cordY = 0; cordY < 9; cordY++)
         {
             for (int cordX = 0; cordX < 9; cordX++)
@@ -111,8 +112,6 @@ public class Board
                 field[cordY, cordX].value = value;
             }
         }
-
-        this.Unlock();
     }
 
     private static int GetNumberOfEmptyCells(Cell[,] field)
