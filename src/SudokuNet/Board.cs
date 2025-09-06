@@ -4,8 +4,9 @@ public class Board
 {
     internal Cell[,] field = new Cell[9, 9];
 
-    public int EmptyCellCount { 
-        get { return GetNumberOfEmptyCells(field); } 
+    public int EmptyCellCount
+    {
+        get { return GetNumberOfEmptyCells(field); }
     }
 
     public Board()
@@ -91,6 +92,27 @@ public class Board
             throw new Exception("Coordinates are invalid");
 
         field[cordY, cordX].isLocked = false;
+    }
+
+    public void LoadFromString(string boardString)
+    {
+        if(boardString.Length != 81)
+            throw new Exception("Board string is invalid. It's lenght must be 81");
+
+        for (int cordY = 0; cordY < 9; cordY++)
+        {
+            for (int cordX = 0; cordX < 9; cordX++)
+            {
+                char c = boardString[cordY * 9 + cordX];
+                int value = (int)char.GetNumericValue(c);
+
+                if (value < 0 || value > 9)
+                    throw new Exception("Board string is invalid. It must contain only numbers between 0-9");
+                field[cordY, cordX].value = value;
+            }
+        }
+
+        this.Unlock();
     }
 
     private static int GetNumberOfEmptyCells(Cell[,] field)

@@ -54,7 +54,7 @@ public static class Sudoku
 
         if (attempts < 1)
             throw new Exception("Attempts cannot be smaller than 1");
-        
+
         if (!board.IsSudokuValid())
             return false;
 
@@ -64,7 +64,7 @@ public static class Sudoku
             {
                 return true;
             }
-                
+
         }
 
         return false;
@@ -102,7 +102,7 @@ public static class Sudoku
                 step++;
             }
         } while (!tmpBoard.IsSudokuSolved());
-        
+
         timer.Stop();
         solvedBoard = tmpBoard;
         return true;
