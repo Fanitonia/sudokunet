@@ -4,7 +4,7 @@
 
 ## About
 
-A .NET Sudoku library that can solve, generate, and validate Sudoku puzzles. 
+A library for working with Sudoku puzzles. It provides tools for generating, solving, and validating Sudoku grids with ease.
 
 
 ## Getting Started

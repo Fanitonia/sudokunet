@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<PackageId>SudokuNet</PackageId>
 		<Product>SudokuNet</Product>
-		<Version>0.8.0</Version>
+		<Version>0.9.0</Version>
 		<Authors>Onur Güdeloğlu</Authors>
 		<Description> A library for working with Sudoku puzzles. It provides tools for generating, solving, and validating Sudoku grids with ease. </Description>
 		<RepositoryUrl>https://github.com/Fanitonia/SudokuNet</RepositoryUrl>
