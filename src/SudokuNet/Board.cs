@@ -14,6 +14,12 @@ public class Board
         Sudoku.InitializeBoard(this);
     }
 
+    /// <summary>
+    /// Attempts to set the value of a cell at the specified coordinates.
+    /// </summary>
+    /// <param name="value">The value to set in the cell. Must be between 1 and 9, inclusive.</param>
+    /// <returns><see langword="true"/> if the value was successfully set; otherwise, <see langword="false"/> if the cell is
+    /// locked.</returns>
     public bool SetCell(int cordX, int cordY, int value)
     {
         if (value > 9 || value < 0)
@@ -31,6 +37,10 @@ public class Board
             return false;
     }
 
+    /// <summary>
+    /// Retrieves the value of the cell at the specified coordinates.
+    /// </summary>
+    /// <returns>The value of the cell at the specified coordinates.</returns>
     public int GetCell(int cordX, int cordY)
     {
         if (!Helper.IsCordValid(cordX, cordY))
@@ -39,6 +49,11 @@ public class Board
         return field[cordY, cordX].value;
     }
 
+    /// <summary>
+    /// Deletes the value of a cell at the specified coordinates if the cell is not locked.
+    /// </summary>
+    /// <returns><see langword="true"/> if the cell value was successfully deleted; otherwise, <see langword="false"/> if the
+    /// cell is locked.</returns>
     public bool DeleteCellValue(int cordX, int cordY)
     {
         if (!Helper.IsCordValid(cordX, cordY))
@@ -53,6 +68,9 @@ public class Board
             return false;
     }
 
+    /// <summary>
+    /// Locks all non-empty cells in the board, preventing further modifications to their values.
+    /// </summary>
     public void Lock()
     {
         for (int cordY = 0; cordY < 9; cordY++)
@@ -67,6 +85,9 @@ public class Board
         }
     }
 
+    /// <summary>
+    /// Locks the specified cell at the given coordinates.
+    /// </summary>
     public void Lock(int cordX, int cordY)
     {
         if (!Helper.IsCordValid(cordX, cordY))
@@ -75,6 +96,9 @@ public class Board
         field[cordY, cordX].isLocked = true;
     }
 
+    /// <summary>
+    /// Unlocks all cells in the board by setting their locked state to <see langword="false"/>.
+    /// </summary>
     public void Unlock()
     {
         for (int cordY = 0; cordY < 9; cordY++)
@@ -86,6 +110,9 @@ public class Board
         }
     }
 
+    /// <summary>
+    /// Unlocks the specified cell at the given coordinates.
+    /// </summary>
     public void Unlock(int cordX, int cordY)
     {
         if (!Helper.IsCordValid(cordX, cordY))
@@ -94,6 +121,12 @@ public class Board
         field[cordY, cordX].isLocked = false;
     }
 
+    /// <summary>
+    /// Loads a Sudoku board from a string representation.
+    /// </summary>
+    /// <remarks>This method initializes the Sudoku board based on the provided string. Each character in the
+    /// string corresponds to a cell in the board, read row by row from top to bottom and left to right. A value of 0
+    /// indicates an empty cell.</remarks>
     public void LoadBoardFrom(string boardString)
     {
         if (boardString.Length != 81)

@@ -2,6 +2,13 @@
 
 public static class BoardExtensions
 {
+    /// <summary>
+    /// Determines whether a specified value can be placed at the given position on the board without violating Sudoku
+    /// rules.
+    /// </summary>
+    /// <param name="value">The value to validate, which must be between 1 and 9.</param>
+    /// <returns><see langword="true"/> if the specified value can be placed at the given position without conflicting with the
+    /// rules of Sudoku; otherwise, <see langword="false"/>.</returns>
     public static bool IsPositionSuitable(this Board board, int cordX, int cordY, int value)
     {
         if (!Helper.IsCordValid(cordX, cordY))
@@ -36,6 +43,11 @@ public static class BoardExtensions
         return true;
     }
 
+    /// <summary>
+    /// Determines whether the current state of the Sudoku board satisfies the rules of a solved puzzle.
+    /// </summary>
+    /// <returns><see langword="true"/> if the Sudoku board is solved and adheres to all Sudoku rules; otherwise, <see
+    /// langword="false"/>.</returns>
     public static bool IsSudokuSolved(this Board board)
     {
         int tmpHolder;
@@ -57,6 +69,13 @@ public static class BoardExtensions
         return true;
     }
 
+    /// <summary>
+    /// Determines whether the current state of the Sudoku board is valid.
+    /// </summary>
+    /// <remarks>A Sudoku board is considered valid if all cells adhere to the rules of Sudoku, meaning no
+    /// duplicate values exist in any row, column, or 3x3 subgrid. Empty cells are allowed and do not affect
+    /// validity.</remarks>
+    /// <returns><see langword="true"/> if the Sudoku board is in a valid state; otherwise, <see langword="false"/>.</returns>
     public static bool IsSudokuValid(this Board board)
     {
         int tmpHolder;
@@ -79,6 +98,10 @@ public static class BoardExtensions
         return true;
     }
 
+    /// <summary>
+    /// Determines whether the specified cell on the board is locked.
+    /// </summary>
+    /// <returns><see langword="true"/> if the cell at the specified coordinates is locked; otherwise, <see langword="false"/>.</returns>
     public static bool IsCellLocked(this Board board, int cordX, int cordY)
     {
         if (!Helper.IsCordValid(cordX, cordY))
@@ -87,6 +110,13 @@ public static class BoardExtensions
         return board.field[cordY, cordX].isLocked;
     }
 
+    /// <summary>
+    /// Displays the current state of the board in a formatted grid layout on the console.
+    /// </summary>
+    /// <remarks>The method renders the board as a 9x9 grid, with rows and columns separated by lines and
+    /// cells  represented by their values. Locked cells are displayed in red, while empty cells are shown as blank
+    /// spaces.</remarks>
+    /// <param name="board"></param>
     public static void PrintToConsole(this Board board)
     {
         ConsoleColor userForeColor = Console.ForegroundColor;
@@ -143,6 +173,10 @@ public static class BoardExtensions
         Console.WriteLine("└───────┴───────┴───────┘");
     }
 
+    /// <summary>
+    /// Creates a deep copy of the specified <see cref="Board"/> instance.
+    /// </summary>
+    /// <returns>A new <see cref="Board"/> instance that is a deep copy of the specified board.</returns>
     public static Board Clone(this Board board)
     {
         Board newBoard = new Board();
