@@ -157,6 +157,61 @@ public class Board
     }
 
     /// <summary>
+    /// Loads a Sudoku board from a one-dimensional array of integers.
+    /// </summary>
+    /// <remarks>This method initializes the Sudoku board based on the provided array. Each value in the
+    /// array corresponds to a cell in the board, read row by row from top to bottom and left to right. A value of 0
+    /// indicates an empty cell.</remarks>
+    public void LoadBoardFrom(int[] boardInt)
+    {
+        if (boardInt.Length != 81)
+            throw new Exception("Board array is invalid. It's lenght must be 81");
+
+        Sudoku.InitializeBoard(this);
+        for (int cordY = 0; cordY < 9; cordY++)
+        {
+            for (int cordX = 0; cordX < 9; cordX++)
+            {
+                int value = boardInt[cordY * 9 + cordX];
+
+                if (value < 0 || value > 9)
+                    throw new Exception("Board array is invalid. It must contain only numbers between 0-9");
+                field[cordY, cordX].value = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Loads a Sudoku board from a two-dimensional integer array.
+    /// </summary>
+    /// <remarks>This method initializes the Sudoku board based on the provided two-dimensional array. Each value in the
+    /// array corresponds to a cell in the board. A value of 0 indicates an empty cell.</remarks>
+    public void LoadBoardFrom(int[][] boardInt)
+    {
+        if (boardInt.Length != 9)
+            throw new Exception("Board array is invalid. It's should have 9 rows");
+
+        foreach (var boardIntArray in boardInt)
+        {
+            if (boardIntArray.Length != 9)
+                throw new Exception("Board array is invalid. It's should have 9 columns");
+        }
+
+        Sudoku.InitializeBoard(this);
+        for (int cordY = 0; cordY < 9; cordY++)
+        {
+            for (int cordX = 0; cordX < 9; cordX++)
+            {
+                int value = boardInt[cordY][cordX];
+
+                if (value < 0 || value > 9)
+                    throw new Exception("Board array is invalid. It must contain only numbers between 0-9");
+                field[cordY, cordX].value = value;
+            }
+        }
+    }
+
+    /// <summary>
     /// Determines whether a specified value can be placed at the given position on the board without violating Sudoku
     /// rules.
     /// </summary>
