@@ -1,16 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<PackageId>SudokuNet</PackageId>
-	<Version>0.8.0</Version>
-	<Authors>OnurG</Authors>
-	<Description>A library that can solve, generate, and validate Sudoku puzzles.</Description>
-	<RepositoryUrl>https://github.com/Fanitonia/SudokuNet</RepositoryUrl>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageId>SudokuNet</PackageId>
+		<Product>SudokuNet</Product>
+		<Version>0.8.0</Version>
+		<Authors>Onur Güdeloğlu</Authors>
+		<Description> A library for working with Sudoku puzzles. It provides tools for generating, solving, and validating Sudoku grids with ease. </Description>
+		<RepositoryUrl>https://github.com/Fanitonia/SudokuNet</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageTags>sudoku;puzzle</PackageTags>
+	</PropertyGroup>
 
+	<ItemGroup>
+		<None Include="../../assets/icon.png" Pack="true" Visible="false" PackagePath="/"></None>
+		<None Include="./README.md" Pack="true" Visible="false" PackagePath="/"></None>
+	</ItemGroup>
+	
 </Project>

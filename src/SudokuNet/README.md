@@ -6,22 +6,9 @@
 
 A .NET Sudoku library that can solve, generate, and validate Sudoku puzzles. 
 
-
-## Getting Started
-
-### Prerequisites
-
-- .NET 8.0
-
-### Installation
-
-1. Add package to your project
-   ```sh
-   dotnet add package SudokuNet
-   ```
 ## How to Use
 
 Coming soon...
 
-[nuget-badge]: https://img.shields.io/nuget/v/SudokuNet
+[nuget-badge]: https://img.shields.io/badge/nuget-0.8.0-blue
 [nuget-package]: https://www.nuget.org/packages/SudokuNet/
