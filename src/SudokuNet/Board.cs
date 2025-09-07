@@ -264,6 +264,32 @@ public class Board
         return this.field[cordY, cordX].isLocked;
     }
 
+    /// <summary>
+    /// Updates the potential values for all cells on the specified Sudoku board.
+    /// </summary>
+    /// <remarks>This method iterates through each cell on the board and recalculates its potential values 
+    /// based on the current state of the board.</remarks>
+    public void UpdatePotentials()
+    {
+        for (int cordY = 0; cordY < 9; cordY++)
+        {
+            for (int cordX = 0; cordX < 9; cordX++)
+                UpdateCellPotentials(cordX, cordY);
+        }
+    }
+
+    private void UpdateCellPotentials(int cordX, int cordY)
+    {
+        List<int> tmpNumbers = new List<int>();
+        for (int testValue = 1; testValue <= 9; testValue++)
+        {
+            if (this.IsPositionSuitable(cordX, cordY, testValue))
+                tmpNumbers.Add(testValue);
+        }
+        field[cordY, cordX].potentialValues.Clear();
+        field[cordY, cordX].potentialValues.AddRange(tmpNumbers);
+    }
+
     private int GetNumberOfEmptyCells()
     {
         int emptyCell = 0;

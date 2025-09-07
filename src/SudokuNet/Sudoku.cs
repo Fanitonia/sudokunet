@@ -101,7 +101,7 @@ public static class Sudoku
         Board tmpBoard = board.Clone();
         solvedBoard = default;
 
-        UpdatePotentials(tmpBoard);
+        tmpBoard.UpdatePotentials();
 
         do
         {
@@ -116,7 +116,7 @@ public static class Sudoku
                 if (cell.value == Constants.EMPTY_CELL && cell.potentialValues.Count == FindSmallestPotential(tmpBoard))
                 {
                     cell.value = cell.potentialValues[random.Next(cell.potentialValues.Count)];
-                    UpdatePotentials(tmpBoard);
+                    tmpBoard.UpdatePotentials();
                     break;
                 }
             }
@@ -124,32 +124,6 @@ public static class Sudoku
 
         solvedBoard = tmpBoard;
         return true;
-    }
-
-    /// <summary>
-    /// Updates the potential values for all cells on the specified Sudoku board.
-    /// </summary>
-    /// <remarks>This method iterates through each cell on the board and recalculates its potential values 
-    /// based on the current state of the board.</remarks>
-    public static void UpdatePotentials(Board board)
-    {
-        for (int cordY = 0; cordY < 9; cordY++)
-        {
-            for (int cordX = 0; cordX < 9; cordX++)
-                UpdateCellPotentials(cordX, cordY, board);
-        }
-    }
-
-    private static void UpdateCellPotentials(int cordX, int cordY, Board board)
-    {
-        List<int> tmpNumbers = new List<int>();
-        for (int testValue = 1; testValue <= 9; testValue++)
-        {
-            if (board.IsPositionSuitable(cordX, cordY, testValue))
-                tmpNumbers.Add(testValue);
-        }
-        board.field[cordY, cordX].potentialValues.Clear();
-        board.field[cordY, cordX].potentialValues.AddRange(tmpNumbers);
     }
 
     private static int FindSmallestPotential(Board board)
