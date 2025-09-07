@@ -2,6 +2,9 @@
 
 namespace SudokuNet;
 
+/// <summary>
+/// Provides static methods for creating, solving, and manipulating Sudoku puzzles.
+/// </summary>
 public static class Sudoku
 {
     /// <summary>
@@ -27,7 +30,7 @@ public static class Sudoku
     public static Board GeneratePuzzle(int clues)
     {
         Board board = new Board();
-        Board solvedBoard = new Board();
+        Board solvedBoard;
 
         while (!Solve(board, out solvedBoard)) { }
 

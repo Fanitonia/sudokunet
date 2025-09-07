@@ -1,14 +1,23 @@
 ﻿namespace SudokuNet;
 
+/// <summary>
+/// Represents a 9x9 Sudoku board, providing methods to manipulate and validate its state.
+/// </summary>
 public class Board
 {
     internal Cell[,] field = new Cell[9, 9];
 
+    /// <summary>
+    /// Gets the number of empty cells in the current field.
+    /// </summary>
     public int EmptyCellCount
     {
-        get { return GetNumberOfEmptyCells(field); }
+        get { return GetNumberOfEmptyCells(); }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Board"/> class.
+    /// </summary>
     public Board()
     {
         Sudoku.InitializeBoard(this);
@@ -255,7 +264,7 @@ public class Board
         return this.field[cordY, cordX].isLocked;
     }
 
-    private static int GetNumberOfEmptyCells(Cell[,] field)
+    private int GetNumberOfEmptyCells()
     {
         int emptyCell = 0;
 

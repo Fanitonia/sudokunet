@@ -1,5 +1,8 @@
 ﻿namespace SudokuNet;
 
+/// <summary>
+/// Provides extension methods for the <see cref="Board"/> class.
+/// </summary>
 public static class BoardExtensions
 {
     /// <summary>
