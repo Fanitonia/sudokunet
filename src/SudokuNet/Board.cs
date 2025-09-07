@@ -147,6 +147,114 @@ public class Board
         }
     }
 
+    /// <summary>
+    /// Determines whether a specified value can be placed at the given position on the board without violating Sudoku
+    /// rules.
+    /// </summary>
+    /// <param name="value">The value to validate, which must be between 1 and 9.</param>
+    /// <returns><see langword="true"/> if the specified value can be placed at the given position without conflicting with the
+    /// rules of Sudoku; otherwise, <see langword="false"/>.</returns>
+    public bool IsPositionSuitable(int cordX, int cordY, int value)
+    {
+        if (!Helper.IsCordValid(cordX, cordY))
+            throw new Exception("Coordinates are invalid");
+        else if (value > 9 || value < 0)
+            throw new Exception("Value is invalid (it must be between 1-9)");
+
+        // checks the column and the row of the position
+        for (int i = 0; i < 9; i++)
+        {
+            if (this.field[cordY, i].value == value)
+                return false;
+
+            else if (this.field[i, cordX].value == value)
+                return false;
+        }
+
+        // finding top left position of the 3x3 are position's part of
+        int rowStart = cordY - cordY % 3;
+        int columnStart = cordX - cordX % 3;
+
+        // checks the 3x3 area position's part of
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (this.field[rowStart + i, columnStart + j].value == value)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Determines whether the current state of the Sudoku board satisfies the rules of a solved puzzle.
+    /// </summary>
+    /// <returns><see langword="true"/> if the Sudoku board is solved and adheres to all Sudoku rules; otherwise, <see
+    /// langword="false"/>.</returns>
+    public bool IsSudokuSolved()
+    {
+        int tmpHolder;
+        for (int cordY = 0; cordY < 9; cordY++)
+        {
+            for (int cordX = 0; cordX < 9; cordX++)
+            {
+                tmpHolder = this.field[cordY, cordX].value;
+                this.field[cordY, cordX].value = Constants.EMPTY_CELL;
+                if (this.IsPositionSuitable(cordX, cordY, tmpHolder) && tmpHolder != Constants.EMPTY_CELL)
+                    this.field[cordY, cordX].value = tmpHolder;
+                else
+                {
+                    this.field[cordY, cordX].value = tmpHolder;
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Determines whether the current state of the Sudoku board is valid.
+    /// </summary>
+    /// <remarks>A Sudoku board is considered valid if all cells adhere to the rules of Sudoku, meaning no
+    /// duplicate values exist in any row, column, or 3x3 subgrid. Empty cells are allowed and do not affect
+    /// validity.</remarks>
+    /// <returns><see langword="true"/> if the Sudoku board is in a valid state; otherwise, <see langword="false"/>.</returns>
+    public bool IsSudokuValid()
+    {
+        int tmpHolder;
+        for (int cordY = 0; cordY < 9; cordY++)
+        {
+            for (int cordX = 0; cordX < 9; cordX++)
+            {
+                tmpHolder = this.field[cordY, cordX].value;
+                this.field[cordY, cordX].value = Constants.EMPTY_CELL;
+                if (tmpHolder == Constants.EMPTY_CELL || IsPositionSuitable(cordX, cordY, tmpHolder))
+                    this.field[cordY, cordX].value = tmpHolder;
+                else
+                {
+                    this.field[cordY, cordX].value = tmpHolder;
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Determines whether the specified cell on the board is locked.
+    /// </summary>
+    /// <returns><see langword="true"/> if the cell at the specified coordinates is locked; otherwise, <see langword="false"/>.</returns>
+    public bool IsCellLocked(int cordX, int cordY)
+    {
+        if (!Helper.IsCordValid(cordX, cordY))
+            throw new Exception("Coordinates are invalid");
+
+        return this.field[cordY, cordX].isLocked;
+    }
+
     private static int GetNumberOfEmptyCells(Cell[,] field)
     {
         int emptyCell = 0;
