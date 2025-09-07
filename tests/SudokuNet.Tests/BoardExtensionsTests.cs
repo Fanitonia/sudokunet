@@ -21,7 +21,7 @@ public class BoardExtensionsTests
         int value)
     {
         var board = new Board();
-        board.SetCell(0, 0, 9);
+        board.field[0, 0].value = 9;
 
         var result = board.IsPositionSuitable(cordX, cordY, value);
 
@@ -38,7 +38,7 @@ public class BoardExtensionsTests
         int value)
     {
         var board = new Board();
-        board.SetCell(0, 0, 9);
+        board.field[0, 0].value = 9;
 
         var result = board.IsPositionSuitable(cordX, cordY, value);
 
@@ -90,8 +90,8 @@ public class BoardExtensionsTests
     public void IsCellLocked_ShouldReturnTrue()
     {
         var board = new Board();
-        board.SetCell(0, 0, 5);
-        board.Lock(0, 0);
+        board.field[0, 0].value = 5;
+        board.field[0, 0].isLocked = true;
 
         board.IsCellLocked(0, 0).Should().BeTrue();
     }
@@ -100,8 +100,28 @@ public class BoardExtensionsTests
     public void IsCellLocked_ShouldReturnFalse()
     {
         var board = new Board();
-        board.SetCell(0, 0, 5);
+        board.field[0, 0].value = 5;
 
         board.IsCellLocked(0, 0).Should().BeFalse();
+    }
+
+    [Fact]
+    public void Clone_ShouldCreateDeepCopy()
+    {
+        var board = new Board();
+        board.field[0, 3].value = 5;
+        board.field[0, 3].isLocked = true;
+
+        var clonedBoard = board.Clone();
+        clonedBoard.field[0, 0].value = 3;
+
+        board.field[0, 3].value.Should().Be(5);
+        board.field[0, 3].isLocked.Should().BeTrue();
+        board.field[0, 0].value.Should().Be(0);
+
+        clonedBoard.field[0, 0].value.Should().Be(3);
+        clonedBoard.field[0, 0].isLocked.Should().BeFalse();
+        clonedBoard.field[0, 3].value.Should().Be(5);
+        clonedBoard.field[0, 3].isLocked.Should().BeTrue();
     }
 }

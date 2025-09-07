@@ -2,9 +2,9 @@
 
 internal class Cell
 {
-    public int value;
-    public List<int> potentialValues = new List<int>();
-    public bool isLocked;
+    internal int value;
+    internal List<int> potentialValues = new List<int>();
+    internal bool isLocked;
 
     internal Cell()
     {
