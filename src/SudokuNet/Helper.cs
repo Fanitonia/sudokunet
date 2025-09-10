@@ -6,7 +6,8 @@ internal static class Helper
     {
         if (cordX > 8 || cordX < 0)
             return false;
-        else if (cordY > 8 || cordY < 0)
+
+        if(cordY > 8 || cordY < 0)
             return false;
 
         return true;

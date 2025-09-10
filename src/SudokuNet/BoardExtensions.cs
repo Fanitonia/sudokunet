@@ -80,8 +80,7 @@ public static class BoardExtensions
         {
             for (int cordX = 0; cordX < 9; cordX++)
             {
-                newBoard.field[cordY, cordX] =
-                    new Cell(
+                newBoard.field[cordY, cordX] = new Cell(
                     board.field[cordY, cordX].value,
                     board.field[cordY, cordX].potentialValues,
                     board.field[cordY, cordX].isLocked);

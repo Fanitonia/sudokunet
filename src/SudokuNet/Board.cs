@@ -37,13 +37,11 @@ public class Board
         if (!Helper.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
-        if (!field[cordY, cordX].isLocked)
-        {
-            field[cordY, cordX].value = value;
-            return true;
-        }
-        else
+        if (field[cordY, cordX].isLocked)
             return false;
+
+        field[cordY, cordX].value = value;
+        return true;
     }
 
     /// <summary>
@@ -68,13 +66,11 @@ public class Board
         if (!Helper.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
-        if (!field[cordY, cordX].isLocked)
-        {
-            field[cordY, cordX].value = 0;
-            return true;
-        }
-        else
+        if (field[cordY, cordX].isLocked)
             return false;
+
+        field[cordY, cordX].value = 0;
+        return true;
     }
 
     /// <summary>
@@ -82,15 +78,10 @@ public class Board
     /// </summary>
     public void Lock()
     {
-        for (int cordY = 0; cordY < 9; cordY++)
+        foreach(var cell in field)
         {
-            for (int cordX = 0; cordX < 9; cordX++)
-            {
-                if (field[cordY, cordX].value != Constants.EMPTY_CELL)
-                {
-                    field[cordY, cordX].isLocked = true;
-                }
-            }
+            if (cell.value != Constants.EMPTY_CELL)
+                cell.isLocked = true;
         }
     }
 
@@ -110,12 +101,9 @@ public class Board
     /// </summary>
     public void Unlock()
     {
-        for (int cordY = 0; cordY < 9; cordY++)
+        foreach (var cell in field)
         {
-            for (int cordX = 0; cordX < 9; cordX++)
-            {
-                field[cordY, cordX].isLocked = false;
-            }
+            cell.isLocked = false;
         }
     }
 
@@ -142,6 +130,7 @@ public class Board
             throw new Exception("Board string is invalid. It's lenght must be 81");
 
         Sudoku.InitializeBoard(this);
+
         for (int cordY = 0; cordY < 9; cordY++)
         {
             for (int cordX = 0; cordX < 9; cordX++)
@@ -151,6 +140,7 @@ public class Board
 
                 if (value < 0 || value > 9)
                     throw new Exception("Board string is invalid. It must contain only numbers between 0-9");
+
                 field[cordY, cordX].value = value;
             }
         }
@@ -168,6 +158,7 @@ public class Board
             throw new Exception("Board array is invalid. It's lenght must be 81");
 
         Sudoku.InitializeBoard(this);
+
         for (int cordY = 0; cordY < 9; cordY++)
         {
             for (int cordX = 0; cordX < 9; cordX++)
@@ -176,6 +167,7 @@ public class Board
 
                 if (value < 0 || value > 9)
                     throw new Exception("Board array is invalid. It must contain only numbers between 0-9");
+
                 field[cordY, cordX].value = value;
             }
         }
@@ -198,6 +190,7 @@ public class Board
         }
 
         Sudoku.InitializeBoard(this);
+
         for (int cordY = 0; cordY < 9; cordY++)
         {
             for (int cordX = 0; cordX < 9; cordX++)
@@ -206,6 +199,7 @@ public class Board
 
                 if (value < 0 || value > 9)
                     throw new Exception("Board array is invalid. It must contain only numbers between 0-9");
+
                 field[cordY, cordX].value = value;
             }
         }
@@ -266,6 +260,7 @@ public class Board
             {
                 tmpHolder = this.field[cordY, cordX].value;
                 this.field[cordY, cordX].value = Constants.EMPTY_CELL;
+
                 if (this.IsPositionSuitable(cordX, cordY, tmpHolder) && tmpHolder != Constants.EMPTY_CELL)
                     this.field[cordY, cordX].value = tmpHolder;
                 else
@@ -294,6 +289,7 @@ public class Board
             {
                 tmpHolder = this.field[cordY, cordX].value;
                 this.field[cordY, cordX].value = Constants.EMPTY_CELL;
+
                 if (tmpHolder == Constants.EMPTY_CELL || IsPositionSuitable(cordX, cordY, tmpHolder))
                     this.field[cordY, cordX].value = tmpHolder;
                 else
@@ -303,7 +299,6 @@ public class Board
                 }
             }
         }
-
         return true;
     }
 
@@ -349,15 +344,10 @@ public class Board
     {
         int emptyCell = 0;
 
-        for (int cordY = 0; cordY < 9; cordY++)
+        foreach(var cell in field)
         {
-            for (int cordX = 0; cordX < 9; cordX++)
-            {
-                if (field[cordY, cordX].value == 0)
-                {
-                    emptyCell++;
-                }
-            }
+            if (cell.value == Constants.EMPTY_CELL)
+                emptyCell++;
         }
 
         return emptyCell;
