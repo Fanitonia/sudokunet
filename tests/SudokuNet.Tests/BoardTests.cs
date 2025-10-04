@@ -151,4 +151,14 @@ public class BoardTests
 
         board.IsCellLocked(0, 0).Should().BeFalse();
     }
+
+    [Fact]
+    public void GetCandidates_ShouldReturnAsExpected()
+    {
+        var board = new Board();
+        board.field[0, 0].value = 3;
+        board.UpdateCandidates();
+
+        board.GetCandidates(5, 0).Should().BeEquivalentTo([1, 2, 4, 5, 6, 7, 8, 9]);
+    }
 }

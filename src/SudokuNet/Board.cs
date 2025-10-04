@@ -315,29 +315,40 @@ public class Board
     }
 
     /// <summary>
+    /// Retrieves the list of candidate values for the specified coordinates.
+    /// </summary>
+    /// <param name="cordX">The X-coordinate of the target cell.</param>
+    /// <param name="cordY">The Y-coordinate of the target cell.</param>
+    /// <returns>An array of integers representing the candidate values for the cell at the specified coordinates.</returns>
+    public int[] GetCandidates(int cordX, int cordY)
+    {
+        return field[cordY, cordX].candidates.ToArray();
+    }
+
+    /// <summary>
     /// Updates the potential values for all cells on the specified Sudoku board.
     /// </summary>
     /// <remarks>This method iterates through each cell on the board and recalculates its potential values 
     /// based on the current state of the board.</remarks>
-    public void UpdatePotentials()
+    public void UpdateCandidates()
     {
         for (int cordY = 0; cordY < 9; cordY++)
         {
             for (int cordX = 0; cordX < 9; cordX++)
-                UpdateCellPotentials(cordX, cordY);
+                UpdateCellCandidates(cordX, cordY);
         }
     }
 
-    private void UpdateCellPotentials(int cordX, int cordY)
+    private void UpdateCellCandidates(int cordX, int cordY)
     {
-        List<int> tmpNumbers = new List<int>();
+        List<int> tmpNumbers = [];
         for (int testValue = 1; testValue <= 9; testValue++)
         {
             if (this.IsPositionSuitable(cordX, cordY, testValue))
                 tmpNumbers.Add(testValue);
         }
-        field[cordY, cordX].potentialValues.Clear();
-        field[cordY, cordX].potentialValues.AddRange(tmpNumbers);
+        field[cordY, cordX].candidates.Clear();
+        field[cordY, cordX].candidates.AddRange(tmpNumbers);
     }
 
     private int GetNumberOfEmptyCells()

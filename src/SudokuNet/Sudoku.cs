@@ -46,7 +46,7 @@ public static class Sudoku
             } while (solvedBoard.field[cordY, cordX].value == Constants.EMPTY_CELL);
 
             board.field[cordY, cordX].value = solvedBoard.field[cordY, cordX].value;
-            board.field[cordY, cordX].potentialValues = solvedBoard.field[cordY, cordX].potentialValues;
+            board.field[cordY, cordX].candidates = solvedBoard.field[cordY, cordX].candidates;
             board.field[cordY, cordX].isLocked = true;
             solvedBoard.field[cordY, cordX].value = Constants.EMPTY_CELL;
         }
@@ -101,22 +101,22 @@ public static class Sudoku
         Board tmpBoard = board.Clone();
         solvedBoard = default;
 
-        tmpBoard.UpdatePotentials();
+        tmpBoard.UpdateCandidates();
 
         do
         {
             foreach (Cell cell in tmpBoard.field)
             {
-                if (cell.value == Constants.EMPTY_CELL && cell.potentialValues.Count == 0)
+                if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == 0)
                     return false;
             }
 
             foreach (Cell cell in tmpBoard.field)
             {
-                if (cell.value == Constants.EMPTY_CELL && cell.potentialValues.Count == FindSmallestPotential(tmpBoard))
+                if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == FindSmallestPotential(tmpBoard))
                 {
-                    cell.value = cell.potentialValues[random.Next(cell.potentialValues.Count)];
-                    tmpBoard.UpdatePotentials();
+                    cell.value = cell.candidates[random.Next(cell.candidates.Count)];
+                    tmpBoard.UpdateCandidates();
                     break;
                 }
             }
@@ -131,8 +131,8 @@ public static class Sudoku
         int smallest = 9;
         foreach (Cell cell in board.field)
         {
-            if (cell.potentialValues.Count < smallest && cell.value == Constants.EMPTY_CELL)
-                smallest = cell.potentialValues.Count;
+            if (cell.candidates.Count < smallest && cell.value == Constants.EMPTY_CELL)
+                smallest = cell.candidates.Count;
         }
         return smallest;
     }

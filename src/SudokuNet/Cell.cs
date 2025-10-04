@@ -3,13 +3,13 @@
 internal class Cell
 {
     internal int value;
-    internal List<int> potentialValues = new List<int>();
+    internal List<int> candidates = [];
     internal bool isLocked;
 
     internal Cell()
     {
         this.value = 0;
-        this.potentialValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        this.candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         this.isLocked = false;
     }
 
@@ -17,7 +17,7 @@ internal class Cell
     internal Cell(int value, List<int> potentialValues, bool isLocked)
     {
         this.value = value;
-        this.potentialValues.AddRange(potentialValues);
+        this.candidates.AddRange(potentialValues);
         this.isLocked = isLocked;
     }
 }

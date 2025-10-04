@@ -82,7 +82,7 @@ public static class BoardExtensions
             {
                 newBoard.field[cordY, cordX] = new Cell(
                     board.field[cordY, cordX].value,
-                    board.field[cordY, cordX].potentialValues,
+                    board.field[cordY, cordX].candidates,
                     board.field[cordY, cordX].isLocked);
             }
         }
