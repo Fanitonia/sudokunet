@@ -24,6 +24,30 @@ public class Board
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="Board"/> class with provided string.
+    /// </summary>
+    public Board(string board)
+    {
+        LoadBoardFrom(board);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Board"/> class with provided one-dimensional integer array.
+    /// </summary>
+    public Board(int[] board)
+    {
+        LoadBoardFrom(board);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Board"/> class with provided two-dimensional integer array.
+    /// </summary>
+    public Board(int[][] board)
+    {
+        LoadBoardFrom(board);
+    }
+
+    /// <summary>
     /// Attempts to set the value of a cell at the specified coordinates.
     /// </summary>
     /// <param name="value">The value to set in the cell. Must be between 1 and 9, inclusive.</param>
@@ -247,7 +271,7 @@ public class Board
     }
 
     /// <summary>
-    /// Determines whether the current state of the Sudoku board satisfies the rules of a solved puzzle.
+    /// Determines whether the current state of the Sudoku board solved.
     /// </summary>
     /// <returns><see langword="true"/> if the Sudoku board is solved and adheres to all Sudoku rules; otherwise, <see
     /// langword="false"/>.</returns>
@@ -326,7 +350,7 @@ public class Board
     }
 
     /// <summary>
-    /// Updates the potential values for all cells on the specified Sudoku board.
+    /// Updates the potential values for all cells.
     /// </summary>
     /// <remarks>This method iterates through each cell on the board and recalculates its potential values 
     /// based on the current state of the board.</remarks>
