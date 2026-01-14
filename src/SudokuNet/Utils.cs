@@ -1,6 +1,6 @@
 ﻿namespace SudokuNet;
 
-internal static class Helper
+internal static class Utils
 {
     internal static bool IsCordValid(int cordX, int cordY)
     {

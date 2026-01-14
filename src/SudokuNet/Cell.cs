@@ -13,19 +13,14 @@ internal class Cell
         this.isLocked = false;
     }
 
-    internal Cell(int value, List<int> potentialValues, bool isLocked)
+    internal Cell(int value, bool isLocked)
     {
-        bool isPotentialValuesValid = potentialValues.All(value => value >= 1 && value <= 9);
         bool isValueValid = value >= 0 && value <= 9;
 
-        if (!isPotentialValuesValid)
-            throw new ArgumentException("Potential values must be between 1 and 9.");
         if (!isValueValid)
             throw new ArgumentException("Cell value must be between 0 and 9.");
 
-
         this.value = value;
-        this.candidates.AddRange(potentialValues);
         this.isLocked = isLocked;
     }
 }

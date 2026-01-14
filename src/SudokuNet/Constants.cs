@@ -1,6 +1,6 @@
 ﻿namespace SudokuNet;
 
-internal class Constants
+internal static class Constants
 {
     internal const int EMPTY_CELL = 0;
 }

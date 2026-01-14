@@ -58,7 +58,7 @@ public class Board
         if (value > 9 || value < 0)
             throw new Exception("Value is invalid (it must be between 1-9)");
 
-        if (!Helper.IsCordValid(cordX, cordY))
+        if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
         if (field[cordY, cordX].isLocked)
@@ -74,7 +74,7 @@ public class Board
     /// <returns>The value of the cell at the specified coordinates.</returns>
     public int GetCell(int cordX, int cordY)
     {
-        if (!Helper.IsCordValid(cordX, cordY))
+        if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
         return field[cordY, cordX].value;
@@ -87,7 +87,7 @@ public class Board
     /// cell is locked.</returns>
     public bool DeleteCellValue(int cordX, int cordY)
     {
-        if (!Helper.IsCordValid(cordX, cordY))
+        if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
         if (field[cordY, cordX].isLocked)
@@ -114,7 +114,7 @@ public class Board
     /// </summary>
     public void Lock(int cordX, int cordY)
     {
-        if (!Helper.IsCordValid(cordX, cordY))
+        if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
         field[cordY, cordX].isLocked = true;
@@ -136,7 +136,7 @@ public class Board
     /// </summary>
     public void Unlock(int cordX, int cordY)
     {
-        if (!Helper.IsCordValid(cordX, cordY))
+        if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
         field[cordY, cordX].isLocked = false;
@@ -238,7 +238,7 @@ public class Board
     /// rules of Sudoku; otherwise, <see langword="false"/>.</returns>
     public bool IsPositionSuitable(int cordX, int cordY, int value)
     {
-        if (!Helper.IsCordValid(cordX, cordY))
+        if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
         else if (value > 9 || value < 0)
             throw new Exception("Value is invalid (it must be between 1-9)");
@@ -332,7 +332,7 @@ public class Board
     /// <returns><see langword="true"/> if the cell at the specified coordinates is locked; otherwise, <see langword="false"/>.</returns>
     public bool IsCellLocked(int cordX, int cordY)
     {
-        if (!Helper.IsCordValid(cordX, cordY))
+        if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
         return this.field[cordY, cordX].isLocked;
