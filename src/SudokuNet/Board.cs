@@ -50,13 +50,12 @@ public class Board
     /// <summary>
     /// Attempts to set the value of a cell at the specified coordinates.
     /// </summary>
-    /// <param name="value">The value to set in the cell. Must be between 1 and 9, inclusive.</param>
     /// <returns><see langword="true"/> if the value was successfully set; otherwise, <see langword="false"/> if the cell is
     /// locked.</returns>
     public bool SetCell(int cordX, int cordY, int value)
     {
         if (value > 9 || value < 0)
-            throw new Exception("Value is invalid (it must be between 1-9)");
+            throw new Exception("Value is invalid (it must be between 0-9)");
 
         if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
@@ -78,23 +77,6 @@ public class Board
             throw new Exception("Coordinates are invalid");
 
         return field[cordY, cordX].value;
-    }
-
-    /// <summary>
-    /// Deletes the value of a cell at the specified coordinates if the cell is not locked.
-    /// </summary>
-    /// <returns><see langword="true"/> if the cell value was successfully deleted; otherwise, <see langword="false"/> if the
-    /// cell is locked.</returns>
-    public bool DeleteCellValue(int cordX, int cordY)
-    {
-        if (!Utils.IsCordValid(cordX, cordY))
-            throw new Exception("Coordinates are invalid");
-
-        if (field[cordY, cordX].isLocked)
-            return false;
-
-        field[cordY, cordX].value = 0;
-        return true;
     }
 
     /// <summary>
@@ -233,7 +215,6 @@ public class Board
     /// Determines whether a specified value can be placed at the given position on the board without violating Sudoku
     /// rules.
     /// </summary>
-    /// <param name="value">The value to validate, which must be between 1 and 9.</param>
     /// <returns><see langword="true"/> if the specified value can be placed at the given position without conflicting with the
     /// rules of Sudoku; otherwise, <see langword="false"/>.</returns>
     public bool IsPositionSuitable(int cordX, int cordY, int value)

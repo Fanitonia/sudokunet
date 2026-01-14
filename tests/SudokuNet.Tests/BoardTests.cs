@@ -42,21 +42,6 @@ public class BoardTests
 
     }
 
-    [Fact]
-    public void DeleteCell_ShouldSetCellToEmpty_WhenCellIsNotLocked()
-    {
-        var board = new Board();
-        board.field[5, 4].value = 5;
-        board.field[5, 4].isLocked = true;
-        board.field[4, 5].value = 9;
-
-        board.DeleteCellValue(4, 5).Should().BeFalse();
-        board.field[5, 4].value.Should().Be(5);
-
-        board.DeleteCellValue(5, 4).Should().BeTrue();
-        board.field[4, 5].value.Should().Be(0);
-    }
-
     [Theory]
     [InlineData(3, 0, 9)] // Same row
     [InlineData(0, 3, 9)] // Same column

@@ -75,7 +75,7 @@ public static class Sudoku
     /// otherwise, <see langword="false"/>.</returns>
     public static bool TrySolve(Board board, out Board solvedBoard, int attempts)
     {
-        solvedBoard = default;
+        solvedBoard = board;
 
         if (attempts < 1)
             throw new Exception("Attempts cannot be smaller than 1");
@@ -99,7 +99,7 @@ public static class Sudoku
     {
         Random random = new Random();
         Board tmpBoard = board.Clone();
-        solvedBoard = default;
+        solvedBoard = board;
 
         tmpBoard.UpdateCandidates();
 
