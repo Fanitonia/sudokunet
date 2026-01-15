@@ -52,7 +52,7 @@ public class Board
     /// </summary>
     /// <returns><see langword="true"/> if the value was successfully set; otherwise, <see langword="false"/> if the cell is
     /// locked.</returns>
-    public bool SetCell(int cordX, int cordY, int value)
+    public bool SetCell(int cordX, int cordY, int value, bool updateCandidates = true)
     {
         if (value > 9 || value < 0)
             throw new Exception("Value is invalid (it must be between 0-9)");
@@ -64,6 +64,10 @@ public class Board
             return false;
 
         field[cordY, cordX].value = value;
+
+        if (updateCandidates)
+            UpdateCandidates();
+
         return true;
     }
 
@@ -130,7 +134,7 @@ public class Board
     /// <remarks>This method initializes the Sudoku board based on the provided string. Each character in the
     /// string corresponds to a cell in the board, read row by row from top to bottom and left to right. A value of 0
     /// indicates an empty cell.</remarks>
-    public void LoadBoardFrom(string boardString)
+    public void LoadBoardFrom(string boardString, bool updateCandidates = true)
     {
         if (boardString.Length != 81)
             throw new Exception("Board string is invalid. It's lenght must be 81");
@@ -150,6 +154,9 @@ public class Board
                 field[cordY, cordX].value = value;
             }
         }
+
+        if (updateCandidates)
+            UpdateCandidates();
     }
 
     /// <summary>
@@ -158,7 +165,7 @@ public class Board
     /// <remarks>This method initializes the Sudoku board based on the provided array. Each value in the
     /// array corresponds to a cell in the board, read row by row from top to bottom and left to right. A value of 0
     /// indicates an empty cell.</remarks>
-    public void LoadBoardFrom(int[] boardInt)
+    public void LoadBoardFrom(int[] boardInt, bool updateCandidates = true)
     {
         if (boardInt.Length != 81)
             throw new Exception("Board array is invalid. It's lenght must be 81");
@@ -177,6 +184,9 @@ public class Board
                 field[cordY, cordX].value = value;
             }
         }
+
+        if (updateCandidates)
+            UpdateCandidates();
     }
 
     /// <summary>
@@ -184,7 +194,7 @@ public class Board
     /// </summary>
     /// <remarks>This method initializes the Sudoku board based on the provided two-dimensional array. Each value in the
     /// array corresponds to a cell in the board. A value of 0 indicates an empty cell.</remarks>
-    public void LoadBoardFrom(int[][] boardInt)
+    public void LoadBoardFrom(int[][] boardInt, bool updateCandidates = true)
     {
         if (boardInt.Length != 9)
             throw new Exception("Board array is invalid. It's should have 9 rows");
@@ -209,6 +219,9 @@ public class Board
                 field[cordY, cordX].value = value;
             }
         }
+
+        if (updateCandidates)
+            UpdateCandidates();
     }
 
     /// <summary>
