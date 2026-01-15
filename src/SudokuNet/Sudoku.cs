@@ -24,7 +24,6 @@ public static class Sudoku
     /// <summary>
     /// Generates a Sudoku puzzle with the specified number of clues.
     /// </summary>
-    /// <param name="clues">The number of clues to include in the generated puzzle. Must be a non-negative integer.</param>
     /// <returns>A <see cref="Board"/> object representing the generated Sudoku puzzle. The board will contain the specified
     /// number of clues, with all other cells empty.</returns>
     public static Board GeneratePuzzle(int clues)
@@ -34,8 +33,8 @@ public static class Sudoku
 
         while (!Solve(board, out solvedBoard)) { }
 
-        int cordX, cordY;
         Random random = new Random();
+        int cordX, cordY;
 
         for (int i = 0; i < clues; i++)
         {
@@ -46,16 +45,17 @@ public static class Sudoku
             } while (solvedBoard.field[cordY, cordX].value == Constants.EMPTY_CELL);
 
             board.field[cordY, cordX].value = solvedBoard.field[cordY, cordX].value;
-            board.field[cordY, cordX].candidates = solvedBoard.field[cordY, cordX].candidates;
             board.field[cordY, cordX].isLocked = true;
             solvedBoard.field[cordY, cordX].value = Constants.EMPTY_CELL;
         }
+
+        board.UpdateCandidates();
 
         return board;
     }
 
     /// <summary>
-    /// Attempts to solve the given board and returns a value indicating whether the operation was successful.
+    /// Attempts to solve the given board and returns a value indicating whether the operation was successful. (Uses 10 attempts by default)
     /// </summary>
     /// <param name="solvedBoard">When this method returns, contains the solved board if the operation was successful; otherwise, contains the
     /// original board.</param>
@@ -81,15 +81,12 @@ public static class Sudoku
             throw new Exception("Attempts cannot be smaller than 1");
 
         if (!board.IsSudokuValid())
-            return false;
+            throw new Exception("The provided board is not valid and cannot be solved.");
 
         for (int i = 0; i < attempts; i++)
         {
             if (Solve(board, out solvedBoard))
-            {
                 return true;
-            }
-
         }
 
         return false;
@@ -113,7 +110,7 @@ public static class Sudoku
 
             foreach (Cell cell in tmpBoard.field)
             {
-                if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == FindSmallestPotential(tmpBoard))
+                if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == FindSmallestCandidateCount(tmpBoard))
                 {
                     cell.value = cell.candidates[random.Next(cell.candidates.Count)];
                     tmpBoard.UpdateCandidates();
@@ -126,7 +123,7 @@ public static class Sudoku
         return true;
     }
 
-    private static int FindSmallestPotential(Board board)
+    private static int FindSmallestCandidateCount(Board board)
     {
         int smallest = 9;
         foreach (Cell cell in board.field)

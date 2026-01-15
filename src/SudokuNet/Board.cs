@@ -103,7 +103,7 @@ public class Board
     }
 
     /// <summary>
-    /// Unlocks all cells in the board by setting their locked state to <see langword="false"/>.
+    /// Unlocks all cells in the board, allowing modifications to their values.
     /// </summary>
     public void Unlock()
     {
@@ -114,7 +114,7 @@ public class Board
     }
 
     /// <summary>
-    /// Unlocks the specified cell at the given coordinates.
+    /// Unlocks the specified cell at the given coordinates. Allows modifications to its value.
     /// </summary>
     public void Unlock(int cordX, int cordY)
     {
@@ -221,16 +221,17 @@ public class Board
     {
         if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
-        else if (value > 9 || value < 0)
+
+        if (value > 9 || value < 0)
             throw new Exception("Value is invalid (it must be between 1-9)");
 
         // checks the column and the row of the position
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 9; i++) 
         {
-            if (this.field[cordY, i].value == value)
+            if (field[cordY, i].value == value)
                 return false;
 
-            else if (this.field[i, cordX].value == value)
+            else if (field[i, cordX].value == value)
                 return false;
         }
 
@@ -243,7 +244,7 @@ public class Board
         {
             for (int j = 0; j < 3; j++)
             {
-                if (this.field[rowStart + i, columnStart + j].value == value)
+                if (field[rowStart + i, columnStart + j].value == value)
                     return false;
             }
         }
@@ -254,8 +255,7 @@ public class Board
     /// <summary>
     /// Determines whether the current state of the Sudoku board solved.
     /// </summary>
-    /// <returns><see langword="true"/> if the Sudoku board is solved and adheres to all Sudoku rules; otherwise, <see
-    /// langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if the Sudoku board is solved; otherwise, <see langword="false"/>.</returns>
     public bool IsSudokuSolved()
     {
         int tmpHolder;
@@ -263,14 +263,14 @@ public class Board
         {
             for (int cordX = 0; cordX < 9; cordX++)
             {
-                tmpHolder = this.field[cordY, cordX].value;
-                this.field[cordY, cordX].value = Constants.EMPTY_CELL;
+                tmpHolder = field[cordY, cordX].value;
+                field[cordY, cordX].value = Constants.EMPTY_CELL;
 
-                if (this.IsPositionSuitable(cordX, cordY, tmpHolder) && tmpHolder != Constants.EMPTY_CELL)
-                    this.field[cordY, cordX].value = tmpHolder;
+                if (tmpHolder != Constants.EMPTY_CELL && IsPositionSuitable(cordX, cordY, tmpHolder) )
+                    field[cordY, cordX].value = tmpHolder;
                 else
                 {
-                    this.field[cordY, cordX].value = tmpHolder;
+                    field[cordY, cordX].value = tmpHolder;
                     return false;
                 }
             }
@@ -292,14 +292,14 @@ public class Board
         {
             for (int cordX = 0; cordX < 9; cordX++)
             {
-                tmpHolder = this.field[cordY, cordX].value;
-                this.field[cordY, cordX].value = Constants.EMPTY_CELL;
+                tmpHolder = field[cordY, cordX].value;
+                field[cordY, cordX].value = Constants.EMPTY_CELL;
 
                 if (tmpHolder == Constants.EMPTY_CELL || IsPositionSuitable(cordX, cordY, tmpHolder))
-                    this.field[cordY, cordX].value = tmpHolder;
+                    field[cordY, cordX].value = tmpHolder;
                 else
                 {
-                    this.field[cordY, cordX].value = tmpHolder;
+                    field[cordY, cordX].value = tmpHolder;
                     return false;
                 }
             }
@@ -316,14 +316,12 @@ public class Board
         if (!Utils.IsCordValid(cordX, cordY))
             throw new Exception("Coordinates are invalid");
 
-        return this.field[cordY, cordX].isLocked;
+        return field[cordY, cordX].isLocked;
     }
 
     /// <summary>
     /// Retrieves the list of candidate values for the specified coordinates.
     /// </summary>
-    /// <param name="cordX">The X-coordinate of the target cell.</param>
-    /// <param name="cordY">The Y-coordinate of the target cell.</param>
     /// <returns>An array of integers representing the candidate values for the cell at the specified coordinates.</returns>
     public int[] GetCandidates(int cordX, int cordY)
     {
@@ -331,7 +329,7 @@ public class Board
     }
 
     /// <summary>
-    /// Updates the potential values for all cells.
+    /// Updates the candidate values for all cells.
     /// </summary>
     /// <remarks>This method iterates through each cell on the board and recalculates its potential values 
     /// based on the current state of the board.</remarks>
@@ -347,25 +345,27 @@ public class Board
     private void UpdateCellCandidates(int cordX, int cordY)
     {
         List<int> tmpNumbers = [];
+
         for (int testValue = 1; testValue <= 9; testValue++)
         {
-            if (this.IsPositionSuitable(cordX, cordY, testValue))
+            if (IsPositionSuitable(cordX, cordY, testValue))
                 tmpNumbers.Add(testValue);
         }
+
         field[cordY, cordX].candidates.Clear();
         field[cordY, cordX].candidates.AddRange(tmpNumbers);
     }
 
     private int GetNumberOfEmptyCells()
     {
-        int emptyCell = 0;
+        int emptyCellCount = 0;
 
         foreach(var cell in field)
         {
             if (cell.value == Constants.EMPTY_CELL)
-                emptyCell++;
+                emptyCellCount++;
         }
 
-        return emptyCell;
+        return emptyCellCount;
     }
 }
