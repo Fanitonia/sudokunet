@@ -55,17 +55,6 @@ public static class Sudoku
     }
 
     /// <summary>
-    /// Attempts to solve the given board and returns a value indicating whether the operation was successful. (Uses 10 attempts by default)
-    /// </summary>
-    /// <param name="solvedBoard">When this method returns, contains the solved board if the operation was successful; otherwise, contains the
-    /// original board.</param>
-    /// <returns><see langword="true"/> if the board was successfully solved; otherwise, <see langword="false"/>.</returns>
-    public static bool TrySolve(Board board, out Board solvedBoard)
-    {
-        return TrySolve(board, out solvedBoard, 10);
-    }
-
-    /// <summary>
     /// Attempts to solve the given Sudoku board within the specified number of attempts.
     /// </summary>
     /// <param name="solvedBoard">When this method returns, contains the solved <see cref="Board"/> if the puzzle was successfully solved;
@@ -73,7 +62,7 @@ public static class Sudoku
     /// <param name="attempts">The maximum number of attempts to try solving the puzzle.</param>
     /// <returns><see langword="true"/> if the Sudoku puzzle was successfully solved within the specified number of attempts;
     /// otherwise, <see langword="false"/>.</returns>
-    public static bool TrySolve(Board board, out Board solvedBoard, int attempts)
+    public static bool TrySolve(Board board, out Board solvedBoard, int attempts = 10)
     {
         solvedBoard = board;
 
