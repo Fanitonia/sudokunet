@@ -10,6 +10,7 @@ public static class Sudoku
     /// <summary>
     /// Initializes the specified game board by populating all cells with empty cells.
     /// </summary>
+    /// <param name="board">The <see cref="Board"/> instance to initialize.</param>
     public static void InitializeBoard(Board board)
     {
         for (int cordY = 0; cordY < 9; cordY++)
@@ -24,6 +25,7 @@ public static class Sudoku
     /// <summary>
     /// Generates a Sudoku puzzle with the specified number of clues.
     /// </summary>
+    /// <param name="clues">The number of clues (filled cells) to include in the generated puzzle.</param>
     /// <returns>A <see cref="Board"/> object representing the generated Sudoku puzzle. The board will contain the specified
     /// number of clues, with all other cells empty.</returns>
     public static Board GeneratePuzzle(int clues)
@@ -57,9 +59,10 @@ public static class Sudoku
     /// <summary>
     /// Attempts to solve the given Sudoku board within the specified number of attempts.
     /// </summary>
+    /// <param name="board">The <see cref="Board"/> instance to solve.</param>
     /// <param name="solvedBoard">When this method returns, contains the solved <see cref="Board"/> if the puzzle was successfully solved;
     /// otherwise, contains the default value of <see cref="Board"/>.</param>
-    /// <param name="attempts">The maximum number of attempts to try solving the puzzle.</param>
+    /// <param name="attempts">The maximum number of attempts to try solving the puzzle. Default is 10.</param>
     /// <returns><see langword="true"/> if the Sudoku puzzle was successfully solved within the specified number of attempts;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool TrySolve(Board board, out Board solvedBoard, int attempts = 10)

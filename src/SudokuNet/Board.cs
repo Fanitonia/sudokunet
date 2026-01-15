@@ -26,6 +26,7 @@ public class Board
     /// <summary>
     /// Initializes a new instance of the <see cref="Board"/> class with provided string.
     /// </summary>
+    /// <param name="board">A string representation of the Sudoku board (must be 81 characters long, containing digits 0-9).</param>
     public Board(string board)
     {
         LoadBoardFrom(board);
@@ -34,6 +35,7 @@ public class Board
     /// <summary>
     /// Initializes a new instance of the <see cref="Board"/> class with provided one-dimensional integer array.
     /// </summary>
+    /// <param name="board">A one-dimensional integer array representing the Sudoku board (must contain 81 elements with values 0-9).</param>
     public Board(int[] board)
     {
         LoadBoardFrom(board);
@@ -42,6 +44,7 @@ public class Board
     /// <summary>
     /// Initializes a new instance of the <see cref="Board"/> class with provided two-dimensional integer array.
     /// </summary>
+    /// <param name="board">A two-dimensional integer array representing the Sudoku board (must be 9x9 with values 0-9).</param>
     public Board(int[][] board)
     {
         LoadBoardFrom(board);
@@ -50,8 +53,11 @@ public class Board
     /// <summary>
     /// Attempts to set the value of a cell at the specified coordinates.
     /// </summary>
-    /// <returns><see langword="true"/> if the value was successfully set; otherwise, <see langword="false"/> if the cell is
-    /// locked.</returns>
+    /// <param name="cordX">The X coordinate of the cell (0-8).</param>
+    /// <param name="cordY">The Y coordinate of the cell (0-8).</param>
+    /// <param name="value">The value to set in the cell (0-9).</param>
+    /// <param name="updateCandidates">If <see langword="true"/>, updates candidate values for all cells after setting; otherwise, candidates remain unchanged. Default is <see langword="true"/>.</param>
+    /// <returns><see langword="true"/> if the value was successfully set; otherwise, <see langword="false"/> if the cell is locked.</returns>
     public bool SetCell(int cordX, int cordY, int value, bool updateCandidates = true)
     {
         if (value > 9 || value < 0)
@@ -74,6 +80,8 @@ public class Board
     /// <summary>
     /// Retrieves the value of the cell at the specified coordinates.
     /// </summary>
+    /// <param name="cordX">The X coordinate of the cell (0-8).</param>
+    /// <param name="cordY">The Y coordinate of the cell (0-8).</param>
     /// <returns>The value of the cell at the specified coordinates.</returns>
     public int GetCell(int cordX, int cordY)
     {
@@ -88,7 +96,7 @@ public class Board
     /// </summary>
     public void Lock()
     {
-        foreach(var cell in field)
+        foreach (var cell in field)
         {
             if (cell.value != Constants.EMPTY_CELL)
                 cell.isLocked = true;
@@ -98,6 +106,8 @@ public class Board
     /// <summary>
     /// Locks the specified cell at the given coordinates.
     /// </summary>
+    /// <param name="cordX">The X coordinate of the cell (0-8).</param>
+    /// <param name="cordY">The Y coordinate of the cell (0-8).</param>
     public void Lock(int cordX, int cordY)
     {
         if (!Utils.IsCordValid(cordX, cordY))
@@ -120,6 +130,8 @@ public class Board
     /// <summary>
     /// Unlocks the specified cell at the given coordinates. Allows modifications to its value.
     /// </summary>
+    /// <param name="cordX">The X coordinate of the cell (0-8).</param>
+    /// <param name="cordY">The Y coordinate of the cell (0-8).</param>
     public void Unlock(int cordX, int cordY)
     {
         if (!Utils.IsCordValid(cordX, cordY))
@@ -134,6 +146,8 @@ public class Board
     /// <remarks>This method initializes the Sudoku board based on the provided string. Each character in the
     /// string corresponds to a cell in the board, read row by row from top to bottom and left to right. A value of 0
     /// indicates an empty cell.</remarks>
+    /// <param name="boardString">The string representation of the Sudoku board (must be 81 characters long, containing digits 0-9).</param>
+    /// <param name="updateCandidates">If <see langword="true"/>, updates candidate values after loading; otherwise, candidates are not updated. Default is <see langword="true"/>.</param>
     public void LoadBoardFrom(string boardString, bool updateCandidates = true)
     {
         if (boardString.Length != 81)
@@ -165,6 +179,8 @@ public class Board
     /// <remarks>This method initializes the Sudoku board based on the provided array. Each value in the
     /// array corresponds to a cell in the board, read row by row from top to bottom and left to right. A value of 0
     /// indicates an empty cell.</remarks>
+    /// <param name="boardInt">A one-dimensional integer array representing the Sudoku board (must contain 81 elements with values 0-9).</param>
+    /// <param name="updateCandidates">If <see langword="true"/>, updates candidate values after loading; otherwise, candidates are not updated. Default is <see langword="true"/>.</param>
     public void LoadBoardFrom(int[] boardInt, bool updateCandidates = true)
     {
         if (boardInt.Length != 81)
@@ -194,6 +210,8 @@ public class Board
     /// </summary>
     /// <remarks>This method initializes the Sudoku board based on the provided two-dimensional array. Each value in the
     /// array corresponds to a cell in the board. A value of 0 indicates an empty cell.</remarks>
+    /// <param name="boardInt">A two-dimensional integer array representing the Sudoku board (must be 9x9 with values 0-9).</param>
+    /// <param name="updateCandidates">If <see langword="true"/>, updates candidate values after loading; otherwise, candidates are not updated. Default is <see langword="true"/>.</param>
     public void LoadBoardFrom(int[][] boardInt, bool updateCandidates = true)
     {
         if (boardInt.Length != 9)
@@ -228,6 +246,9 @@ public class Board
     /// Determines whether a specified value can be placed at the given position on the board without violating Sudoku
     /// rules.
     /// </summary>
+    /// <param name="cordX">The X coordinate of the cell (0-8).</param>
+    /// <param name="cordY">The Y coordinate of the cell (0-8).</param>
+    /// <param name="value">The value to check (0-9).</param>
     /// <returns><see langword="true"/> if the specified value can be placed at the given position without conflicting with the
     /// rules of Sudoku; otherwise, <see langword="false"/>.</returns>
     public bool IsPositionSuitable(int cordX, int cordY, int value)
@@ -239,7 +260,7 @@ public class Board
             throw new Exception("Value is invalid (it must be between 1-9)");
 
         // checks the column and the row of the position
-        for (int i = 0; i < 9; i++) 
+        for (int i = 0; i < 9; i++)
         {
             if (field[cordY, i].value == value)
                 return false;
@@ -279,7 +300,7 @@ public class Board
                 tmpHolder = field[cordY, cordX].value;
                 field[cordY, cordX].value = Constants.EMPTY_CELL;
 
-                if (tmpHolder != Constants.EMPTY_CELL && IsPositionSuitable(cordX, cordY, tmpHolder) )
+                if (tmpHolder != Constants.EMPTY_CELL && IsPositionSuitable(cordX, cordY, tmpHolder))
                     field[cordY, cordX].value = tmpHolder;
                 else
                 {
@@ -323,6 +344,8 @@ public class Board
     /// <summary>
     /// Determines whether the specified cell on the board is locked.
     /// </summary>
+    /// <param name="cordX">The X coordinate of the cell (0-8).</param>
+    /// <param name="cordY">The Y coordinate of the cell (0-8).</param>
     /// <returns><see langword="true"/> if the cell at the specified coordinates is locked; otherwise, <see langword="false"/>.</returns>
     public bool IsCellLocked(int cordX, int cordY)
     {
@@ -335,6 +358,8 @@ public class Board
     /// <summary>
     /// Retrieves the list of candidate values for the specified coordinates.
     /// </summary>
+    /// <param name="cordX">The X coordinate of the cell (0-8).</param>
+    /// <param name="cordY">The Y coordinate of the cell (0-8).</param>
     /// <returns>An array of integers representing the candidate values for the cell at the specified coordinates.</returns>
     public int[] GetCandidates(int cordX, int cordY)
     {
@@ -373,7 +398,7 @@ public class Board
     {
         int emptyCellCount = 0;
 
-        foreach(var cell in field)
+        foreach (var cell in field)
         {
             if (cell.value == Constants.EMPTY_CELL)
                 emptyCellCount++;

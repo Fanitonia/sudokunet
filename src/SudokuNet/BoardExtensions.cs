@@ -11,7 +11,7 @@ public static class BoardExtensions
     /// <remarks>The method renders the board as a 9x9 grid, with rows and columns separated by lines and
     /// cells  represented by their values. Locked cells are displayed in red, while empty cells are shown as blank
     /// spaces.</remarks>
-    /// <param name="board"></param>
+    /// <param name="board">The <see cref="Board"/> instance to display.</param>
     public static void PrintToConsole(this Board board)
     {
         ConsoleColor userForeColor = Console.ForegroundColor;
@@ -71,6 +71,7 @@ public static class BoardExtensions
     /// <summary>
     /// Creates a deep copy of the specified <see cref="Board"/> instance.
     /// </summary>
+    /// <param name="board">The <see cref="Board"/> instance to clone.</param>
     /// <returns>A new <see cref="Board"/> instance that is a deep copy of the specified board.</returns>
     public static Board Clone(this Board board)
     {
