@@ -4,6 +4,8 @@ namespace SudokuDemo
 {
     internal class Program
     {
+        record Cursor(int X, int Y);
+
         static void Main(string[] args)
         {
             char selection = PromptMainMenu();
@@ -77,6 +79,47 @@ namespace SudokuDemo
             int selectedDifficultyClue = PromptDifficultySelection();
             Board board = Sudoku.GeneratePuzzle(selectedDifficultyClue);
             Console.Clear();
+            DisplayBoard(board, new Cursor(0,0));
+        }
+
+        static void DisplayBoard(Board board, Cursor cursor)
+        {
+            Console.WriteLine("┌───────┬───────┬───────┐");
+
+            for (int cordY = 0; cordY < 9; cordY++)
+            {
+                Console.Write("│ ");
+
+                for (int cordX = 0; cordX < 9; cordX++)
+                {
+                    int value = board.GetCell(cordX, cordY);
+                    bool isLocked = board.IsCellLocked(cordX, cordY);
+                    bool isCursor = cordX == cursor.X && cordY == cursor.Y;
+
+                    if (isCursor)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Cyan;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    if (!isLocked)
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+
+                    Console.Write(value == 0 ? "." : value.ToString());
+                    Console.ResetColor();
+                    Console.Write(" ");
+
+                    if ((cordX + 1) % 3 == 0 && cordX < 8)
+                        Console.Write("│ ");
+                }
+
+                Console.WriteLine("│");
+
+                if ((cordY + 1) % 3 == 0 && cordY < 8)
+                    Console.WriteLine("├───────┼───────┼───────┤");
+            }
+
+            Console.WriteLine("└───────┴───────┴───────┘");
         }
     }
 }
