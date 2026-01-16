@@ -33,7 +33,7 @@ public static class Sudoku
         Board board = new Board();
         Board solvedBoard;
 
-        while (!Solve(board, out solvedBoard)) { }
+        while (!TrySolve(board, out solvedBoard)) { }
 
         Random random = new Random();
         int cordX, cordY;
@@ -57,62 +57,65 @@ public static class Sudoku
     }
 
     /// <summary>
-    /// Attempts to solve the given Sudoku board within the specified number of attempts.
+    /// Attempts to solve the specified Sudoku board.
     /// </summary>
     /// <param name="board">The <see cref="Board"/> instance to solve.</param>
-    /// <param name="solvedBoard">When this method returns, contains the solved <see cref="Board"/> if the puzzle was successfully solved;
-    /// otherwise, contains the default value of <see cref="Board"/>.</param>
-    /// <param name="attempts">The maximum number of attempts to try solving the puzzle. Default is 10.</param>
-    /// <returns><see langword="true"/> if the Sudoku puzzle was successfully solved within the specified number of attempts;
-    /// otherwise, <see langword="false"/>.</returns>
-    public static bool TrySolve(Board board, out Board solvedBoard, int attempts = 10)
+    /// <param name="solvedBoard">When this method returns, contains the solved <see cref="Board"/>, or a cloned copy of the input board if solving failed.</param>
+    /// <param name="attempts">The maximum number of solving attempts. Default is 1000. Must be greater than 0.</param>
+    /// <returns><c>true</c> if the board was successfully solved; otherwise, <c>false</c>.</returns>
+    public static bool TrySolve(Board board, out Board solvedBoard, int attempts = 1000)
     {
-        solvedBoard = board;
+        solvedBoard = board.Clone();
 
         if (attempts < 1)
-            throw new Exception("Attempts cannot be smaller than 1");
+            throw new ArgumentException("Attempts cannot be smaller than 1");
 
         if (!board.IsSudokuValid())
             throw new Exception("The provided board is not valid and cannot be solved.");
 
-        for (int i = 0; i < attempts; i++)
+        Random random = new Random();
+        Board tmpBoard;
+        bool canContinue;
+        bool isSolved;
+
+        for (int attempt = 0; attempt < attempts; attempt++)
         {
-            if (Solve(board, out solvedBoard))
+            tmpBoard = board.Clone();
+            canContinue = true;
+            isSolved = false;
+
+            do
+            {
+                foreach (Cell cell in tmpBoard.field)
+                {
+                    if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == 0)
+                        canContinue = false;
+                }
+
+                if (!canContinue)
+                    break;
+
+                foreach (Cell cell in tmpBoard.field)
+                {
+                    if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == FindSmallestCandidateCount(tmpBoard))
+                    {
+                        cell.value = cell.candidates[random.Next(cell.candidates.Count)];
+                        tmpBoard.UpdateCandidates();
+                        break;
+                    }
+                }
+
+                isSolved = tmpBoard.IsSudokuSolved();
+            } while (!isSolved);
+
+            if (isSolved)
+            {
+                solvedBoard = tmpBoard;
                 return true;
+            }
         }
 
         return false;
-    }
-
-    private static bool Solve(Board board, out Board solvedBoard)
-    {
-        Random random = new Random();
-        Board tmpBoard = board.Clone();
-        solvedBoard = board;
-
-        tmpBoard.UpdateCandidates();
-
-        do
-        {
-            foreach (Cell cell in tmpBoard.field)
-            {
-                if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == 0)
-                    return false;
-            }
-
-            foreach (Cell cell in tmpBoard.field)
-            {
-                if (cell.value == Constants.EMPTY_CELL && cell.candidates.Count == FindSmallestCandidateCount(tmpBoard))
-                {
-                    cell.value = cell.candidates[random.Next(cell.candidates.Count)];
-                    tmpBoard.UpdateCandidates();
-                    break;
-                }
-            }
-        } while (!tmpBoard.IsSudokuSolved());
-
-        solvedBoard = tmpBoard;
-        return true;
     }
 
     private static int FindSmallestCandidateCount(Board board)

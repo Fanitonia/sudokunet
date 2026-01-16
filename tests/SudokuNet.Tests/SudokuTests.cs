@@ -28,7 +28,7 @@ public class SudokuTests
     {
         var board = new Board();
         board.LoadBoardFrom(boardString);
-        var result = Sudoku.TrySolve(board, out var solvedBoard, 100);
+        var result = Sudoku.TrySolve(board, out var solvedBoard);
         result.Should().BeTrue();
         solvedBoard.IsSudokuSolved().Should().BeTrue();
     }
