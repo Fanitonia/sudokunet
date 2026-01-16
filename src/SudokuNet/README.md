@@ -10,5 +10,5 @@ A library for working with Sudoku puzzles. It provides tools for generating, sol
 
 Coming soon...
 
-[nuget-badge]: https://img.shields.io/badge/nuget-0.10.0-blue
+[nuget-badge]: https://img.shields.io/badge/nuget-0.11.0-blue
 [nuget-package]: https://www.nuget.org/packages/SudokuNet/
