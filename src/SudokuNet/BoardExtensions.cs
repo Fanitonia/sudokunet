@@ -8,63 +8,32 @@ public static class BoardExtensions
     /// <summary>
     /// Displays the current state of the board in a formatted grid layout on the console.
     /// </summary>
-    /// <remarks>The method renders the board as a 9x9 grid, with rows and columns separated by lines and
-    /// cells  represented by their values. Locked cells are displayed in red, while empty cells are shown as blank
-    /// spaces.</remarks>
     /// <param name="board">The <see cref="Board"/> instance to display.</param>
     public static void PrintToConsole(this Board board)
     {
-        ConsoleColor userForeColor = Console.ForegroundColor;
-        int cordX = 0, cordY = 0;
-
         Console.WriteLine("┌───────┬───────┬───────┐");
-        for (int y = 2; y <= 12; y++)
+
+        for (int cordY = 0; cordY < 9; cordY++)
         {
-            for (int x = 1; x <= 25; x++)
+            Console.Write("│ ");
+
+            for (int cordX = 0; cordX < 9; cordX++)
             {
-                if (x % 8 == 1)
-                {
-                    if (y == 5 || y == 9 || y == 14)
-                        Console.Write("┼");
-                    else
-                        Console.Write("│");
-                    continue;
-                }
+                int value = board.GetCell(cordX, cordY);
 
-                if (y % 4 == 1)
-                {
-                    Console.Write("─");
-                    continue;
-                }
+                Console.Write(value == 0 ? "." : value.ToString());
+                Console.Write(" ");
 
-                if (x % 2 == 0)
-                {
-                    Console.Write(" ");
-                    continue;
-                }
-
-                if (x % 2 == 1)
-                {
-                    if (board.field[cordY, cordX].value != Constants.EMPTY_CELL)
-                    {
-                        if (board.field[cordY, cordX].isLocked)
-                            Console.ForegroundColor = ConsoleColor.Red;
-
-                        Console.Write(board.field[cordY, cordX].value);
-                        Console.ForegroundColor = userForeColor;
-                    }
-                    else
-                        Console.Write(" ");
-
-                    cordX++;
-                }
+                if ((cordX + 1) % 3 == 0 && cordX < 8)
+                    Console.Write("│ ");
             }
-            if (y % 4 != 1)
-                cordY++;
 
-            cordX = 0;
-            Console.WriteLine();
+            Console.WriteLine("│");
+
+            if ((cordY + 1) % 3 == 0 && cordY < 8)
+                Console.WriteLine("├───────┼───────┼───────┤");
         }
+
         Console.WriteLine("└───────┴───────┴───────┘");
     }
 
