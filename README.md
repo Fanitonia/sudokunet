@@ -6,7 +6,6 @@
 
 A library for working with Sudoku puzzles. It provides tools for generating, solving, and validating Sudoku grids with ease.
 
-
 ## Getting Started
 
 ### Prerequisites
@@ -22,6 +21,9 @@ A library for working with Sudoku puzzles. It provides tools for generating, sol
 ## How to Use
 
 Coming soon...
+
+## SudokuDemo
+SudokuDemo is a sudoku console app that uses SudokuNet library.
 
 [nuget-badge]: https://img.shields.io/nuget/v/SudokuNet
 [nuget-package]: https://www.nuget.org/packages/SudokuNet/
